@@ -898,6 +898,9 @@
                         </a>
                         <!-- FILTROS -->
                         <div class="header-controls">
+                            <button id="btn-sync" onclick="syncData()" class="btn-minimal" style="background: rgba(167, 139, 250, 0.15); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); font-weight: 600; padding: 10px 15px; margin-right: 10px;">
+                                <i class="fas fa-sync-alt" id="sync-icon"></i> Sincronizar
+                            </button>
                             <div class="filter-group">
                                 <i class="fas fa-calendar-year"></i>
                                 <select id="yearFilter">
@@ -1066,6 +1069,21 @@
     <script type="module">
         import { supabase } from './supabaseClient.js';
         
+        window.syncData = async function() {
+            const btn = document.getElementById('btn-sync');
+            const icon = document.getElementById('sync-icon');
+            if(btn) btn.disabled = true;
+            if(icon) icon.classList.add('fa-spin');
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                await loadDashboardData(session.user);
+            }
+            
+            if(icon) icon.classList.remove('fa-spin');
+            if(btn) btn.disabled = false;
+        };
+
         window.handleLogin = async function() {
             const phone = document.getElementById('phone-input').value.trim();
             if (!phone) return;
