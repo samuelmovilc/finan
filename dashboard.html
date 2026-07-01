@@ -871,7 +871,7 @@
                 <header class="header">
                     <div class="header-left">
                         <div class="header-greeting">
-                            <h2>Hola, <span>Carlos</span></h2>
+                            <h2>Hola, <span id="user-name">Carlos</span> <span id="user-phone" style="font-size: 0.6em; opacity: 0.7; margin-left: 10px; font-weight: 400;"><i class="fas fa-mobile-alt"></i> </span></h2>
                             <p><i class="fas fa-calendar-alt" style="margin-right: 6px; opacity:0.6;"></i> Resumen al 30 de junio, 2026</p>
                         </div>
                         <!-- PLAN INFO -->
@@ -939,7 +939,7 @@
                             <div class="bar-item">
                                 <div class="bar-label">
                                     <span>Ingresos</span>
-                                    <span class="bar-value">$12,450</span>
+                                    <span class="bar-value" id="val-ingresos">$0.00</span>
                                 </div>
                                 <div class="bar-track">
                                     <div class="bar-fill income" style="width:85%;"></div>
@@ -952,7 +952,7 @@
                             <div class="bar-item">
                                 <div class="bar-label">
                                     <span>Egresos</span>
-                                    <span class="bar-value">$8,230</span>
+                                    <span class="bar-value" id="val-egresos">$0.00</span>
                                 </div>
                                 <div class="bar-track">
                                     <div class="bar-fill expense" style="width:55%;"></div>
@@ -965,7 +965,7 @@
                             <div class="bar-item">
                                 <div class="bar-label">
                                     <span>Balance disponible</span>
-                                    <span class="bar-value">$4,220</span>
+                                    <span class="bar-value" id="val-balance">$0.00</span>
                                 </div>
                                 <div class="bar-track">
                                     <div class="bar-fill balance" style="width:45%;"></div>
@@ -1161,9 +1161,9 @@
 
                     <!-- TABLA DE MOVIMIENTOS -->
                     <div class="card transactions-card">
-                        <div class="card-title">
-                            Registro de movimientos
-                            <i class="fas fa-table"></i>
+                        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>Registro de movimientos <i class="fas fa-table"></i></div>
+                            <button id="btn-download-csv" style="background: var(--btn-hover); color: var(--text-primary); border: 1px solid var(--border-color); padding: 5px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: 0.2s;"><i class="fas fa-download"></i> Descargar Historial</button>
                         </div>
                         <div class="table-wrapper">
                             <table class="transactions-table">
@@ -1177,79 +1177,8 @@
                                         <th>Tipo</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><span class="text-muted">#001</span></td>
-                                        <td>2026-06-28</td>
-                                        <td class="font-mono">$3,200.00</td>
-                                        <td>Salario</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-income">Ingreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#002</span></td>
-                                        <td>2026-06-27</td>
-                                        <td class="font-mono">-$450.00</td>
-                                        <td>Supermercado</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-expense">Egreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#003</span></td>
-                                        <td>2026-06-25</td>
-                                        <td class="font-mono">-$1,200.00</td>
-                                        <td>Alquiler</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-expense">Egreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#004</span></td>
-                                        <td>2026-06-20</td>
-                                        <td class="font-mono">+$800.00</td>
-                                        <td>Freelance</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-income">Ingreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#005</span></td>
-                                        <td>2026-06-15</td>
-                                        <td class="font-mono">-$180.00</td>
-                                        <td>Restaurante</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-expense">Egreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#006</span></td>
-                                        <td>2026-06-10</td>
-                                        <td class="font-mono">+$2,500.00</td>
-                                        <td>Dividendos</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-income">Ingreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#007</span></td>
-                                        <td>2026-06-05</td>
-                                        <td class="font-mono">-$320.00</td>
-                                        <td>Ropa</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-expense">Egreso</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#008</span></td>
-                                        <td>2026-06-01</td>
-                                        <td class="font-mono">+$1,000.00</td>
-                                        <td>Ahorro</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-savings">Ahorro</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-muted">#009</span></td>
-                                        <td>2026-06-28</td>
-                                        <td class="font-mono">+$500.00</td>
-                                        <td>Reserva</td>
-                                        <td>Junio</td>
-                                        <td><span class="badge-type badge-emergency">Reserva</span></td>
-                                    </tr>
+                                <tbody id="transactions-body">
+                                    <tr><td colspan="6" style="text-align:center; padding: 20px;">Cargando movimientos...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1329,29 +1258,122 @@
             }
         });
         
+        let userTransactions = [];
+
         async function loadDashboardData(user) {
-            // Cargar datos reales de la base de datos
-            const { data, error } = await supabase
+            // 1. Obtener datos del cliente
+            const { data: clientData } = await supabase
                 .from('clients')
                 .select('*')
                 .eq('id', user.id)
                 .single();
                 
-            if (data) {
-                // Actualizar nombre
-                const greetingName = document.querySelector('.header-greeting h2 span');
-                if (greetingName) {
-                    // Extraer primer nombre
-                    greetingName.textContent = data.nombre.split(' ')[0];
-                }
+            if (clientData) {
+                const nameEl = document.getElementById('user-name');
+                if (nameEl) nameEl.textContent = clientData.nombre.split(' ')[0];
                 
-                // Actualizar plan
+                const phoneEl = document.getElementById('user-phone');
+                if (phoneEl) phoneEl.innerHTML = '<i class="fas fa-mobile-alt"></i> ' + (clientData.telefono || '');
+                
                 const planBadge = document.querySelector('.plan-badge');
-                if (planBadge && data.plan) {
-                    planBadge.textContent = data.plan.toUpperCase();
+                if (planBadge && clientData.plan) planBadge.textContent = clientData.plan.toUpperCase();
+            }
+
+            // 2. Cargar Transacciones Reales
+            const { data: txData, error: txError } = await supabase
+                .from('transactions')
+                .select('*')
+                .eq('id_cliente', user.id)
+                .order('fecha', { ascending: false });
+
+            if (txError) {
+                console.error('Error cargando transacciones:', txError);
+                return;
+            }
+            
+            userTransactions = txData || [];
+            
+            // 3. Procesar Totales
+            let totalIngresos = 0;
+            let totalEgresos = 0;
+            
+            userTransactions.forEach(tx => {
+                const val = parseFloat(tx.valor) || 0;
+                if (tx.tipo && tx.tipo.toLowerCase() === 'ingreso') {
+                    totalIngresos += val;
+                } else if (tx.tipo && tx.tipo.toLowerCase() === 'egreso') {
+                    totalEgresos += val;
                 }
+            });
+            
+            let balance = totalIngresos - totalEgresos;
+            
+            const formatMoney = (num) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(num);
+            
+            document.getElementById('val-ingresos').textContent = formatMoney(totalIngresos);
+            document.getElementById('val-egresos').textContent = formatMoney(totalEgresos);
+            document.getElementById('val-balance').textContent = formatMoney(balance);
+            
+            // 4. Renderizar Tabla
+            const tbody = document.getElementById('transactions-body');
+            tbody.innerHTML = '';
+            
+            if (userTransactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">Aún no tienes movimientos registrados. ¡Envía un mensaje a tu Agente para empezar!</td></tr>';
+            } else {
+                userTransactions.forEach((tx, idx) => {
+                    const tr = document.createElement('tr');
+                    const badgeClass = (tx.tipo && tx.tipo.toLowerCase() === 'ingreso') ? 'badge-income' : 'badge-expense';
+                    const tipoText = tx.tipo ? tx.tipo.toUpperCase() : 'DESCONOCIDO';
+                    
+                    tr.innerHTML = `
+                        <td><span class="text-muted">#${String(userTransactions.length - idx).padStart(3, '0')}</span></td>
+                        <td>${tx.fecha || 'N/A'}</td>
+                        <td class="font-mono">${formatMoney(tx.valor)}</td>
+                        <td>${tx.categoria || 'N/A'}</td>
+                        <td>${tx.mes || 'N/A'}</td>
+                        <td><span class="badge-type ${badgeClass}">${tipoText}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
         }
+        
+        // 5. Descargar CSV
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDownload = document.getElementById('btn-download-csv');
+            if (btnDownload) {
+                btnDownload.addEventListener('click', () => {
+                    if (!userTransactions || userTransactions.length === 0) {
+                        alert('No hay datos para descargar.');
+                        return;
+                    }
+                    
+                    let csv = 'Fecha,Descripcion,Monto,Categoria,Mes,Tipo\n';
+                    userTransactions.forEach(tx => {
+                        const row = [
+                            tx.fecha || '',
+                            (tx.descripcion || '').replace(/,/g, ' '),
+                            tx.valor || 0,
+                            tx.categoria || '',
+                            tx.mes || '',
+                            tx.tipo || ''
+                        ];
+                        csv += row.join(',') + '\n';
+                    });
+                    
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', 'historial_financiero.csv');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+            }
+        });
     </script>
 
     <script>
