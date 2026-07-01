@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinanSmart · Registro de Cliente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== MISMO BRANDING DARK LUXURY ===== */
+        :root {
+            --bg-body: #0B0F19;
+            --bg-dashboard: rgba(30, 38, 64, 0.25);
+            --bg-card: rgba(30, 38, 64, 0.4);
+            --text-primary: #E2E8F0;
+            --text-secondary: #8892a8;
+            --text-muted: #5f6a80;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --input-bg: rgba(0, 0, 0, 0.2);
+            --btn-bg: rgba(30, 38, 64, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.08);
+            --badge-active: rgba(0, 230, 118, 0.12);
+            --strike-color: rgba(248, 113, 113, 0.4);
+            --badge-audio: rgba(96, 165, 250, 0.15);
+            --cop-color: #fbbf24;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-dashboard: rgba(255, 255, 255, 0.6);
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --btn-bg: rgba(255, 255, 255, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.08);
+            --badge-active: rgba(0, 230, 118, 0.15);
+            --strike-color: rgba(248, 113, 113, 0.5);
+            --badge-audio: rgba(96, 165, 250, 0.2);
+            --cop-color: #d97706;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-container {
+            max-width: 620px;
+            width: 100%;
+            background: var(--bg-dashboard);
+            backdrop-filter: blur(6px);
+            border-radius: 40px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        [data-theme="light"] .form-container {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .form-header .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .form-header .logo span {
+            color: #00E676;
+        }
+        .form-header .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .form-header .badge-plan {
+            display: inline-block;
+            margin-top: 10px;
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.15);
+            border-radius: 40px;
+            padding: 4px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #00E676;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== COPY MOTIVACIONAL (antes de seleccionar plan) ===== */
+        .hero-copy {
+            text-align: center;
+            padding: 20px 20px 16px;
+            margin: 0 0 20px 0;
+            background: rgba(0, 230, 118, 0.02);
+            border: 1px solid rgba(0, 230, 118, 0.04);
+            border-radius: 20px;
+            position: relative;
+        }
+        .hero-copy .copy-text {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            letter-spacing: 0.2px;
+        }
+        .hero-copy .copy-text strong {
+            color: #00E676;
+            font-weight: 600;
+        }
+        .hero-copy .copy-text .highlight {
+            color: var(--cop-color);
+            font-weight: 500;
+        }
+        .hero-copy .copy-divider {
+            width: 40px;
+            height: 2px;
+            background: rgba(0, 230, 118, 0.15);
+            margin: 10px auto 8px;
+            border-radius: 4px;
+        }
+        .hero-copy .copy-cta {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+        .hero-copy .copy-cta i {
+            color: #00E676;
+            margin: 0 4px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .form-group label .required {
+            color: #f87171;
+            margin-left: 2px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #00E676;
+            box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.05);
+        }
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .form-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 20px 0;
+        }
+
+        /* ===== PLAN SELECTOR - BOTONES ALINEADOS A LA IZQUIERDA ===== */
+        .plan-selector-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .plan-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            text-align: left;
+        }
+        .plan-btn:hover {
+            border-color: rgba(0, 230, 118, 0.25);
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .plan-btn.selected {
+            border-color: #00E676;
+            background: rgba(0, 230, 118, 0.04);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.02), inset 0 0 30px rgba(0, 230, 118, 0.02);
+        }
+
+        .plan-btn .radio-circle {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .plan-btn.selected .radio-circle {
+            border-color: #00E676;
+            background: #00E676;
+        }
+        .plan-btn.selected .radio-circle::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            color: #0B0F19;
+        }
+        [data-theme="light"] .plan-btn.selected .radio-circle::after {
+            color: #ffffff;
+        }
+
+        .plan-btn .plan-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 4px 14px;
+            flex: 1;
+        }
+        .plan-btn .plan-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .plan-btn .plan-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00E676;
+        }
+        .plan-btn .plan-price small {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .plan-btn .plan-price-cop {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--cop-color);
+            opacity: 0.8;
+        }
+        .plan-btn .plan-price-cop small {
+            font-size: 11px;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+        .plan-btn .plan-strike {
+            font-size: 13px;
+            color: var(--strike-color);
+            text-decoration: line-through;
+        }
+        .plan-btn .plan-weekly-cop {
+            font-size: 12px;
+            color: var(--cop-color);
+            opacity: 0.7;
+            font-weight: 400;
+        }
+        .plan-btn .plan-weekly-cop span {
+            font-weight: 500;
+            opacity: 1;
+        }
+        .plan-btn .plan-weekly-cop small {
+            font-size: 10px;
+            opacity: 0.6;
+        }
+        .plan-btn .plan-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        /* Badges en línea */
+        .plan-btn .badges-inline {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-left: 4px;
+        }
+        .plan-btn .badge-feature {
+            background: var(--badge-audio);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 20px;
+            padding: 1px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: none;
+            white-space: nowrap;
+        }
+        .plan-btn .badge-feature i {
+            margin-right: 4px;
+            font-size: 9px;
+        }
+        .plan-btn .badge-feature.show {
+            display: inline-block;
+        }
+
+        .plan-btn .badge-best {
+            background: #00E676;
+            color: #0B0F19;
+            border-radius: 20px;
+            padding: 1px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: none;
+            white-space: nowrap;
+        }
+        .plan-btn .badge-best.show {
+            display: inline-block;
+        }
+        [data-theme="light"] .plan-btn .badge-best {
+            color: #ffffff;
+        }
+
+        /* Tasa de cambio */
+        .exchange-rate {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+            opacity: 0.5;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 16px;
+            padding: 14px;
+            color: #00E676;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: #00E676;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 230, 118, 0.05);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        .btn-submit i {
+            font-size: 18px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .form-footer a {
+            color: #00E676;
+            text-decoration: none;
+        }
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            transform: translateX(calc(100% + 40px));
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            max-width: 380px;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .toast .toast-message {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .toast .toast-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            z-index: 100;
+        }
+        .theme-toggle:hover {
+            border-color: #00E676;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 24px 18px 30px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-header .logo {
+                font-size: 24px;
+            }
+            .plan-btn {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+            .plan-btn .plan-content {
+                gap: 2px 10px;
+            }
+            .plan-btn .plan-price {
+                font-size: 16px;
+            }
+            .plan-btn .badges-inline {
+                margin-left: 0;
+                width: 100%;
+                padding-top: 4px;
+            }
+            .plan-btn .plan-price-cop {
+                font-size: 12px;
+            }
+            .exchange-rate {
+                text-align: left;
+            }
+            .hero-copy .copy-text {
+                font-size: 14px;
+            }
+            .hero-copy .copy-cta {
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 400px) {
+            .plan-btn {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .plan-btn .radio-circle {
+                position: absolute;
+                top: 10px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- HEADER -->
+        <div class="form-header">
+            <div class="logo"><span>Finan</span>Smart</div>
+            <div class="subtitle">Registro de cliente · Activa tu licencia</div>
+            <div class="badge-plan">✨ Plan seleccionado: <span id="selectedPlanLabel">Mensual</span></div>
+        </div>
+
+        <form id="registerForm" onsubmit="submitForm(event)">
+            <!-- DATOS PERSONALES -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre completo <span class="required">*</span></label>
+                    <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required />
+                </div>
+                <div class="form-group">
+                    <label>Teléfono <span class="required">*</span></label>
+                    <input type="tel" id="telefono" placeholder="573001234567" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" id="email" placeholder="cliente@email.com" required />
+            </div>
+
+            <div class="form-group">
+                <label>Empresa / Negocio</label>
+                <input type="text" id="empresa" placeholder="Nombre de tu negocio (opcional)" />
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- ===== COPY MOTIVACIONAL (antes de seleccionar plan) ===== -->
+            <div class="hero-copy">
+                <div class="copy-text">
+                    <strong>¡Al fin podrás organizar y controlar tus finanzas</strong> antes de que sea demasiado tarde. <span class="highlight">Exitos</span> y escoge el <strong>mejor plan</strong> para ti.
+                </div>
+                <div class="copy-divider"></div>
+                <div class="copy-cta">
+                    <i class="fas fa-arrow-right"></i> Elige tu plan y comienza ahora <i class="fas fa-arrow-left"></i>
+                </div>
+            </div>
+
+            <!-- SELECCIÓN DE PLAN - BOTONES ALINEADOS A LA IZQUIERDA CON COP -->
+            <div class="form-group">
+                <label>Selecciona tu plan <span class="required">*</span></label>
+                <div class="plan-selector-grid" id="planSelector">
+                    <!-- Plan Mensual -->
+                    <div class="plan-btn selected" data-plan="mensual" data-price="10.90" data-weekly-cop="9,800" data-audio="false" onclick="selectPlan(this)">
+                        <div class="radio-circle"></div>
+                        <div class="plan-content">
+                            <span class="plan-name">Mensual</span>
+                            <span class="plan-price">$10.90 <small>/ mes</small></span>
+                            <span class="plan-price-cop">≈ $39,200 COP <small>/ mes</small></span>
+                            <span class="plan-weekly-cop">≈ <span>$9,800</span> <small>COP / semana</small></span>
+                            <span class="plan-desc">Flexible · Sin compromiso</span>
+                        </div>
+                    </div>
+
+                    <!-- Plan Anual (con año tachado) -->
+                    <div class="plan-btn" data-plan="anual" data-price="99.00" data-weekly-cop="6,850" data-audio="true" onclick="selectPlan(this)">
+                        <div class="radio-circle"></div>
+                        <div class="plan-content">
+                            <span class="plan-name">Anual</span>
+                            <span class="plan-price">$99 <small>/ año</small></span>
+                            <span class="plan-strike">$130.80 / año</span>
+                            <span class="plan-price-cop">≈ $356,300 COP <small>/ año</small></span>
+                            <span class="plan-weekly-cop">≈ <span>$6,850</span> <small>COP / semana</small></span>
+                            <span class="plan-desc">Ahorra 24%</span>
+                            <div class="badges-inline">
+                                <span class="badge-feature show"><i class="fas fa-headphones"></i> Interpreta audio</span>
+                                <span class="badge-best show">⭐ mejor valor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plan 5 Años (sin año tachado) -->
+                    <div class="plan-btn" data-plan="5años" data-price="199.00" data-weekly-cop="2,750" data-audio="false" onclick="selectPlan(this)">
+                        <div class="radio-circle"></div>
+                        <div class="plan-content">
+                            <span class="plan-name">5 Años</span>
+                            <span class="plan-price">$199 <small>/ 5 años</small></span>
+                            <span class="plan-price-cop">≈ $716,200 COP <small>/ 5 años</small></span>
+                            <span class="plan-weekly-cop">≈ <span>$2,750</span> <small>COP / semana</small></span>
+                            <span class="plan-desc">Máximo ahorro</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasa de cambio -->
+                <div class="exchange-rate">
+                    <i class="fas fa-exchange-alt" style="margin-right:4px;"></i> Tasa de cambio: 1 USD = $3,599 COP
+                </div>
+
+                <input type="hidden" id="planSeleccionado" value="mensual" />
+                <input type="hidden" id="precioSeleccionado" value="10.90" />
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- CONFIGURACIÓN INICIAL -->
+            <div class="form-group">
+                <label>Moneda preferida</label>
+                <select id="moneda">
+                    <option value="USD">USD ($)</option>
+                    <option value="COP">COP ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="MXN">MXN ($)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Idioma del dashboard</label>
+                <select id="idioma">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- TÉRMINOS -->
+            <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <input type="checkbox" id="terminos" style="width:18px;height:18px;accent-color:#00E676;cursor:pointer;" required />
+                <label for="terminos" style="font-size:13px;color:var(--text-secondary);cursor:pointer;text-transform:none;letter-spacing:0;">
+                    Acepto los <a href="#" style="color:#00E676;text-decoration:none;">términos y condiciones</a>
+                </label>
+            </div>
+
+            <!-- BOTÓN -->
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-rocket"></i> Activar licencia
+            </button>
+
+            <div class="form-footer">
+                <i class="fas fa-lock" style="opacity:0.4;"></i> Datos seguros · <a href="https://wa.me/573002397590" target="_blank">¿Problemas? Contáctanos</a>
+            </div>
+        </form>
+
+        <!-- PANTALLA DE ÉXITO (Oculta por defecto) -->
+        <div id="success-screen" style="display: none; text-align: center; padding: 40px 20px;">
+            <i class="fas fa-check-circle" style="font-size: 64px; color: #00E676; margin-bottom: 20px;"></i>
+            <h2 style="color: var(--text-primary); margin-bottom: 16px; font-size: 24px;">¡Registro Exitoso!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px; font-size: 15px; line-height: 1.6;">
+                Tu cuenta ha sido creada. Ahora el agente de IA está listo para atenderte.
+                Inicia la conversación para completar tu activación.
+            </p>
+            <a href="https://wa.me/573002397590?text=Hola,%20acabo%20de%20registrarme%20y%20quiero%20iniciar" 
+               target="_blank" 
+               style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #00E676; color: #000; text-decoration: none; padding: 18px 30px; border-radius: 16px; font-weight: 600; font-size: 18px; width: 100%; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);">
+                <i class="fab fa-whatsapp" style="font-size: 24px;"></i> Chatear con el Agente
+            </a>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <button class="toast-close" onclick="closeToast()">&times;</button>
+        <div class="toast-title" id="toastTitle">✅ ¡Registro exitoso!</div>
+        <div class="toast-message" id="toastMessage">El cliente ha sido registrado en Supabase.</div>
+    </div>
+
+    <!-- BOTÓN TEMA -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+        window.supabase = supabase;
+    </script>
+    <script>
+        // ============================================================
+        // 1. SELECCIÓN DE PLAN - BOTONES
+        // ============================================================
+        function selectPlan(el) {
+            document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+
+            document.getElementById('planSeleccionado').value = el.dataset.plan;
+            document.getElementById('precioSeleccionado').value = el.dataset.price;
+
+            const labelMap = { 'mensual': 'Mensual', 'anual': 'Anual', '5años': '5 Años' };
+            document.getElementById('selectedPlanLabel').textContent = labelMap[el.dataset.plan] || 'Mensual';
+        }
+
+        // ============================================================
+        // 2. ENVÍO DEL FORMULARIO → SUPABASE
+        // ============================================================
+        
+        async function submitForm(e) {
+
+            e.preventDefault();
+
+            if (!document.getElementById('terminos').checked) {
+                showToast('⚠️ Acepta los términos', 'Debes aceptar los términos para continuar.');
+                return;
+            }
+
+            const payload = {
+                nombre: document.getElementById('nombre').value.trim(),
+                telefono: document.getElementById('telefono').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                empresa: document.getElementById('empresa').value.trim() || '',
+                plan: document.getElementById('planSeleccionado').value,
+                precio: parseFloat(document.getElementById('precioSeleccionado').value),
+                moneda: document.getElementById('moneda').value,
+                idioma: document.getElementById('idioma').value,
+                fecha_registro: new Date().toISOString().split('T')[0],
+                estado: 'activo',
+                fecha_inicio: new Date().toISOString().split('T')[0],
+                fuente: 'formulario_web',
+                metodo_pago: 'whatsapp_manual'
+            };
+
+            const btn = document.querySelector('.btn-submit');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+            btn.disabled = true;
+
+            try {
+                // Generar una contraseña a partir del teléfono (para login rápido)
+                const tempPassword = payload.telefono + 'A1!';
+                
+                // 1. Crear usuario en Supabase Auth
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: payload.email,
+                    password: tempPassword,
+                    options: {
+                        data: { full_name: payload.nombre }
+                    }
+                });
+
+                if (authError) throw authError;
+
+                // 2. Insertar en tabla clients
+                if (authData.user) {
+                    const { error: dbError } = await supabase
+                        .from('clients')
+                        .insert([{
+                            id: authData.user.id,
+                            ...payload
+                        }]);
+                    
+                    if (dbError) throw dbError;
+                }
+                
+                // Mostrar pantalla de éxito
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('❌ Error al registrar', error.message || 'Intenta nuevamente.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // ============================================================
+        // 3. TOAST NOTIFICATIONS
+        // ============================================================
+        let toastTimeout = null;
+
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        function closeToast() {
+            document.getElementById('toast').classList.remove('show');
+            clearTimeout(toastTimeout);
+        }
+
+        // ============================================================
+        // 4. TEMA DÍA / NOCHE
+        // ============================================================
+        let currentTheme = 'dark';
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        themeToggle.addEventListener('click', () => {
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+                currentTheme = 'light';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+                currentTheme = 'dark';
+            }
+        });
+
+        // ============================================================
+        // 5. ENTER PARA ENVÍO
+        // ============================================================
+        document.getElementById('registerForm').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                submitForm(e);
+            }
+        });
+
+        console.log('✅ Formulario listo. Reemplaza la URL del webhook de n8n.');
+        console.log('📦 Datos que se enviarán a Supabase:', {
+            tabla: 'clientes',
+            campos: ['nombre', 'telefono', 'email', 'empresa', 'plan', 'precio', 'moneda', 'idioma', 'fechaRegistro',
+                'estado', 'fechaInicio', 'fuente', 'metodoPago'
+            ]
+        });
+    </script>
+</body>
+</html>

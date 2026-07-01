@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Dashboard · Personal</title>
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* --- VARIABLES (modo día/noche) --- */
+        :root {
+            --bg-body: #0B0F19;
+            --bg-dashboard: rgba(30, 38, 64, 0.25);
+            --bg-card: rgba(30, 38, 64, 0.4);
+            --text-primary: #E2E8F0;
+            --text-secondary: #8892a8;
+            --text-muted: #5f6a80;
+            --border-color: rgba(255, 255, 255, 0.02);
+            --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.5);
+            --bar-bg: rgba(255, 255, 255, 0.04);
+            --table-bg: rgba(0, 0, 0, 0.15);
+            --filter-bg: rgba(30, 38, 64, 0.4);
+            --select-bg: rgba(0, 0, 0, 0.2);
+            --goal-bg: rgba(0, 0, 0, 0.2);
+            --progress-bg: rgba(255, 255, 255, 0.04);
+            --tooltip-shadow: rgba(0, 0, 0, 0.9);
+            --btn-bg: rgba(30, 38, 64, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.1);
+        }
+
+        
+        /* Modo Rosado Premium */
+        [data-theme="pink"] {
+            --bg-body: #fdf2f8;
+            --bg-dashboard: rgba(253, 234, 244, 0.7);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text-primary: #831843;
+            --text-secondary: #9d174d;
+            --text-muted: #be185d;
+            --border-color: rgba(244, 114, 182, 0.3);
+            --shadow-card: 0 12px 32px rgba(244, 114, 182, 0.15);
+            --shadow-hover: 0 16px 40px rgba(244, 114, 182, 0.25);
+            --bar-bg: rgba(244, 114, 182, 0.1);
+            --table-bg: rgba(253, 234, 244, 0.4);
+            --filter-bg: rgba(255, 255, 255, 0.8);
+            --select-bg: rgba(255, 255, 255, 0.5);
+            --goal-bg: rgba(244, 114, 182, 0.1);
+            --progress-bg: rgba(244, 114, 182, 0.2);
+            --tooltip-shadow: rgba(255, 255, 255, 0.9);
+            --btn-bg: rgba(252, 165, 165, 0.2);
+            --btn-hover: rgba(244, 114, 182, 0.3);
+        }
+
+        /* Modo día */
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-dashboard: rgba(255, 255, 255, 0.6);
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.12);
+            --bar-bg: rgba(0, 0, 0, 0.06);
+            --table-bg: rgba(0, 0, 0, 0.04);
+            --filter-bg: rgba(255, 255, 255, 0.5);
+            --select-bg: rgba(255, 255, 255, 0.3);
+            --goal-bg: rgba(0, 0, 0, 0.04);
+            --progress-bg: rgba(0, 0, 0, 0.06);
+            --tooltip-shadow: rgba(255, 255, 255, 0.9);
+            --btn-bg: rgba(255, 255, 255, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', 'SF Pro Display', 'Cabinet Grotesk', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .dashboard {
+            max-width: 1440px;
+            width: 100%;
+            background: var(--bg-dashboard);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 48px;
+            padding: 24px 28px 32px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            transition: all 0.4s ease;
+        }
+        [data-theme="light"] .dashboard {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .app-layout {
+            display: flex;
+            gap: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .header-greeting h2 {
+            font-weight: 500;
+            font-size: 26px;
+            letter-spacing: -0.4px;
+            color: var(--text-primary);
+        }
+        .header-greeting h2 span {
+            font-weight: 600;
+            background: linear-gradient(135deg, #00E676 0%, #66ffa6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-greeting p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            letter-spacing: 0.2px;
+        }
+
+        /* --- INFO PLAN --- */
+        .plan-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--filter-bg);
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--text-secondary);
+            backdrop-filter: blur(4px);
+            transition: background 0.3s ease;
+            flex-wrap: wrap;
+        }
+        .plan-info .plan-badge {
+            background: #00E676;
+            color: #0B0F19;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .plan-info .plan-dates {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .plan-info .plan-dates i {
+            color: #00E676;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .plan-info .plan-dates span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* --- BOTONES MINIMALISTAS --- */
+        .btn-minimal {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 8px 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+        }
+        .btn-minimal i {
+            font-size: 14px;
+            color: #00E676;
+        }
+        .btn-minimal:hover {
+            border-color: #00E676;
+            background: var(--btn-hover);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.05);
+            transform: translateY(-1px);
+        }
+        .btn-minimal.activate {
+            background: rgba(0, 230, 118, 0.08);
+            border-color: rgba(0, 230, 118, 0.2);
+        }
+        .btn-minimal.activate:hover {
+            background: rgba(0, 230, 118, 0.15);
+            border-color: #00E676;
+        }
+        .btn-minimal.support i {
+            color: #60a5fa;
+        }
+        .btn-minimal.support:hover {
+            border-color: #60a5fa;
+        }
+
+        .theme-toggle {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px;
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .theme-toggle:hover {
+            border-color: #00E676;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.05);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--filter-bg);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 4px 12px 4px 16px;
+            border: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .filter-group i {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .filter-group select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 0;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            min-width: 70px;
+            transition: color 0.3s ease;
+        }
+        .filter-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .filter-group select:hover {
+            color: #00E676;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--filter-bg);
+            padding: 6px 14px 6px 18px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: background 0.3s ease;
+        }
+        .date-range i {
+            color: #00E676;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* --- GRID 12 --- */
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 22px;
+        }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 22px 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            border-color: rgba(0, 230, 118, 0.15);
+            box-shadow: var(--shadow-hover), 0 0 0 1px rgba(0, 230, 118, 0.02);
+            transform: translateY(-2px);
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title i {
+            color: #00E676;
+            opacity: 0.5;
+            font-size: 16px;
+        }
+
+        /* --- GRÁFICO DE BARRAS --- */
+        .barchart-card {
+            grid-column: span 3;
+        }
+        .barchart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 6px;
+        }
+        .bar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .bar-label .bar-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .bar-track {
+            width: 100%;
+            height: 6px;
+            background: var(--bar-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.8s ease-in-out;
+            position: relative;
+        }
+        .bar-fill.income {
+            background: linear-gradient(90deg, #00E676, #66ffa6);
+            box-shadow: 0 0 16px rgba(0, 230, 118, 0.25);
+        }
+        .bar-fill.expense {
+            background: linear-gradient(90deg, #f87171, #fca5a5);
+            box-shadow: 0 0 16px rgba(248, 113, 113, 0.2);
+        }
+        .bar-fill.balance {
+            background: linear-gradient(90deg, #60a5fa, #93bbfc);
+            box-shadow: 0 0 16px rgba(96, 165, 250, 0.25);
+        }
+        .bar-fill.savings {
+            background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+            box-shadow: 0 0 16px rgba(167, 139, 250, 0.25);
+        }
+        .bar-fill.emergency {
+            background: linear-gradient(90deg, #fbbf24, #fcd34d);
+            box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
+        }
+        .bar-compare {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            margin-top: 2px;
+            color: var(--text-secondary);
+        }
+        .bar-compare .up {
+            color: #00E676;
+        }
+        .bar-compare .down {
+            color: #f87171;
+        }
+        .bar-compare i {
+            font-size: 11px;
+        }
+
+        /* --- GRÁFICO FLUJO DE CAJA --- */
+        .cashflow-card {
+            grid-column: span 6;
+        }
+        .chart-container {
+            width: 100%;
+            height: 150px;
+            margin-top: 4px;
+            position: relative;
+        }
+        .chart-container svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+        .chart-legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .chart-legend span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .legend-dot.income {
+            background: #00E676;
+            box-shadow: 0 0 12px rgba(0, 230, 118, 0.2);
+        }
+        .legend-dot.expense {
+            background: #f87171;
+            box-shadow: 0 0 12px rgba(248, 113, 113, 0.15);
+        }
+
+        .chart-point {
+            cursor: pointer;
+            transition: r 0.2s ease;
+        }
+        .chart-point:hover {
+            r: 7;
+        }
+        .chart-point-income {
+            fill: #00E676;
+            opacity: 0.9;
+        }
+        .chart-point-income:hover {
+            fill: #66ffa6;
+            opacity: 1;
+        }
+        .chart-point-expense {
+            fill: #f87171;
+            opacity: 0.8;
+        }
+        .chart-point-expense:hover {
+            fill: #fca5a5;
+            opacity: 1;
+        }
+        .tooltip-label {
+            font-size: 11px;
+            fill: var(--text-primary);
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            pointer-events: none;
+            text-shadow: 0 0 12px var(--tooltip-shadow);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .point-group:hover .tooltip-label {
+            opacity: 1;
+        }
+
+        /* --- DONUT --- */
+        .donut-card {
+            grid-column: span 3;
+        }
+        .donut-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .donut-svg-container {
+            width: 110px;
+            height: 110px;
+            flex-shrink: 0;
+        }
+        .donut-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            transition: 0.2s;
+        }
+        .legend-item .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 20px;
+        }
+        .legend-item .value {
+            margin-left: auto;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .legend-item:hover {
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        /* --- METAS DE AHORRO --- */
+        .goals-card {
+            grid-column: span 12;
+        }
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-top: 6px;
+        }
+        .goal-item {
+            background: var(--goal-bg);
+            border-radius: 24px;
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s ease;
+        }
+        .goal-item:hover {
+            border-color: rgba(0, 230, 118, 0.08);
+            box-shadow: 0 0 0 1px rgba(0, 230, 118, 0.02);
+        }
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .goal-header .goal-percent {
+            color: #00E676;
+            font-weight: 600;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--progress-bg);
+            border-radius: 20px;
+            margin-top: 4px;
+            position: relative;
+            overflow: visible;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00E676, #66ffa6);
+            border-radius: 20px;
+            box-shadow: 0 0 14px rgba(0, 230, 118, 0.3);
+            transition: width 0.6s ease-in-out;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: -2px;
+            width: 10px;
+            height: 10px;
+            background: var(--text-primary);
+            border-radius: 20px;
+            box-shadow: 0 0 20px #00E676;
+            opacity: 0.6;
+        }
+        .goal-amount {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* --- TABLA DE MOVIMIENTOS --- */
+        .transactions-card {
+            grid-column: span 12;
+            margin-top: 6px;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            background: var(--table-bg);
+            padding: 4px 0;
+            transition: background 0.3s ease;
+        }
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 700px;
+        }
+        .transactions-table th {
+            text-align: left;
+            padding: 14px 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .transactions-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+        .transactions-table tr:hover td {
+            background: rgba(0, 230, 118, 0.03);
+        }
+        .transactions-table tr:last-child td {
+            border-bottom: none;
+        }
+        .badge-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .badge-income {
+            background: rgba(0, 230, 118, 0.12);
+            color: #00E676;
+        }
+        .badge-expense {
+            background: rgba(248, 113, 113, 0.12);
+            color: #f87171;
+        }
+        .badge-savings {
+            background: rgba(167, 139, 250, 0.12);
+            color: #a78bfa;
+        }
+        .badge-emergency {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .font-mono {
+            font-family: 'Inter', monospace;
+            font-weight: 500;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .barchart-card {
+                grid-column: span 12;
+            }
+            .cashflow-card {
+                grid-column: span 12;
+            }
+            .donut-card {
+                grid-column: span 6;
+            }
+            .goals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .plan-info {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+        @media (max-width: 700px) {
+            .dashboard {
+                padding: 16px;
+            }
+            .header-greeting h2 {
+                font-size: 20px;
+            }
+            .header-controls {
+                gap: 8px;
+            }
+            .filter-group {
+                padding: 2px 8px 2px 12px;
+            }
+            .filter-group select {
+                font-size: 12px;
+                min-width: 60px;
+            }
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+            .donut-card {
+                grid-column: span 12;
+            }
+            .transactions-table {
+                font-size: 12px;
+                min-width: 600px;
+            }
+            .transactions-table th,
+            .transactions-table td {
+                padding: 10px 12px;
+            }
+            .plan-info {
+                font-size: 11px;
+                padding: 4px 12px;
+                gap: 10px;
+            }
+            .btn-minimal {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+            .btn-minimal span {
+                display: none;
+            }
+            .theme-toggle span {
+                display: none;
+            }
+        }
+        
+        /* LOGIN OVERLAY CSS */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .login-overlay.hidden { display: none; }
+        .login-box {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(8px);
+        }
+        .login-box h2 { margin-bottom: 24px; color: var(--text-primary); font-size: 24px; }
+        .login-box p { color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; line-height: 1.5; }
+        .login-box input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.2);
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+        [data-theme="light"] .login-box input {
+            background: rgba(255,255,255,0.6);
+        }
+        .login-box button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            background: #00E676;
+            color: #000;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .login-box button:hover { background: #00c853; }
+        #login-error { color: #f87171; margin-top: 14px; font-size: 14px; display: none; }
+    </style>
+</head>
+<body>
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Bienvenido</h2>
+            <p>Ingresa el número de teléfono con el que te registraste para acceder a tu panel.</p>
+            <input type="tel" id="phone-input" placeholder="Ej: 573001234567" onkeydown="if(event.key==='Enter') handleLogin()">
+            <button id="login-btn" onclick="handleLogin()">Entrar al Dashboard</button>
+            <div id="login-error"></div>
+        </div>
+    </div>
+    
+    <div class="dashboard" id="main-dashboard" style="display: none;">
+        <div class="app-layout">
+            <main class="main-content">
+                <!-- HEADER -->
+                <header class="header">
+                    <div class="header-left">
+                        <div class="header-greeting">
+                            <h2>Hola, <span>Carlos</span></h2>
+                            <p><i class="fas fa-calendar-alt" style="margin-right: 6px; opacity:0.6;"></i> Resumen al 30 de junio, 2026</p>
+                        </div>
+                        <!-- PLAN INFO -->
+                        <div class="plan-info">
+                            <span class="plan-badge">Premium</span>
+                            <div class="plan-dates">
+                                <i class="fas fa-calendar-plus"></i>
+                                <span>Inicio:</span> 01/01/2026
+                            </div>
+                            <div class="plan-dates">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Fin:</span> 31/12/2026
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="header-right">
+                        <!-- BOTÓN CHAT AGENTE (WhatsApp) -->
+                        <a href="https://wa.me/573002397590?text=Hola,%20necesito%20asistencia%20con%20mis%20finanzas" 
+                           target="_blank" 
+                           class="btn-minimal activate" style="background: rgba(0, 230, 118, 0.15); color: #00E676; border: 1px solid rgba(0, 230, 118, 0.3); font-weight: 600; padding: 10px 20px;">
+                            <i class="fab fa-whatsapp" style="font-size: 18px;"></i>
+                            <span>Chatear con tu Agente</span>
+                        </a>
+                        <!-- FILTROS -->
+                        <div class="header-controls">
+                            <div class="filter-group">
+                                <i class="fas fa-calendar-year"></i>
+                                <select id="yearFilter">
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <i class="fas fa-calendar-day"></i>
+                                <select id="monthFilter">
+                                    <option value="6">Junio</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="1">Enero</option>
+                                </select>
+                            </div>
+                            <div class="date-range">
+                                <i class="fas fa-calendar-week"></i> 01 Jun – 30 Jun
+                                <i class="fas fa-chevron-down" style="font-size:10px; margin-left: 4px; opacity:0.5;"></i>
+                            </div>
+                        </div>
+                        <!-- BOTÓN DÍA/NOCHE -->
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- GRID 12 -->
+                <div class="grid-12">
+
+                    <!-- GRÁFICO DE BARRAS -->
+                    <div class="card barchart-card">
+                        <div class="card-title">Resumen financiero <i class="fas fa-chart-bar"></i></div>
+                        <div class="barchart-container">
+                            <div class="bar-item">
+                                <div class="bar-label">
+                                    <span>Ingresos</span>
+                                    <span class="bar-value">$12,450</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill income" style="width:85%;"></div>
+                                </div>
+                                <div class="bar-compare">
+                                    <span class="up"><i class="fas fa-arrow-up"></i> +8.2%</span>
+                                    <span>vs mes anterior</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">
+                                    <span>Egresos</span>
+                                    <span class="bar-value">$8,230</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill expense" style="width:55%;"></div>
+                                </div>
+                                <div class="bar-compare">
+                                    <span class="up"><i class="fas fa-arrow-up"></i> +3.1%</span>
+                                    <span>vs mes anterior</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">
+                                    <span>Balance disponible</span>
+                                    <span class="bar-value">$4,220</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill balance" style="width:45%;"></div>
+                                </div>
+                                <div class="bar-compare">
+                                    <span class="up"><i class="fas fa-arrow-up"></i> +12.6%</span>
+                                    <span>vs mes anterior</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">
+                                    <span>Ahorros</span>
+                                    <span class="bar-value">$2,800</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill savings" style="width:30%;"></div>
+                                </div>
+                                <div class="bar-compare">
+                                    <span class="up"><i class="fas fa-arrow-up"></i> +5.3%</span>
+                                    <span>vs mes anterior</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">
+                                    <span>Reserva imprevistos</span>
+                                    <span class="bar-value">$1,500</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill emergency" style="width:20%;"></div>
+                                </div>
+                                <div class="bar-compare">
+                                    <span class="down"><i class="fas fa-arrow-down"></i> -2.1%</span>
+                                    <span>vs mes anterior</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRÁFICO FLUJO DE CAJA -->
+                    <div class="card cashflow-card">
+                        <div class="card-title">Flujo de Caja · mensual <i class="fas fa-chart-simple"></i></div>
+                        <div class="chart-container">
+                            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+                                <polyline points="0,100 50,70 100,110 150,50 200,80 250,30 300,60 350,20 400,50 450,40 500,30" 
+                                    stroke="#00E676" stroke-width="2.5" fill="none" filter="drop-shadow(0 0 6px rgba(0,230,118,0.2))" />
+                                <polyline points="0,130 50,120 100,140 150,90 200,110 250,70 300,100 350,60 400,90 450,80 500,70" 
+                                    stroke="#f87171" stroke-width="2.5" fill="none" stroke-dasharray="6 4" opacity="0.8" />
+
+                                <g class="point-group">
+                                    <circle cx="0" cy="100" r="4" class="chart-point chart-point-income" />
+                                    <text x="0" y="88" class="tooltip-label" text-anchor="middle">$3,200</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="50" cy="70" r="4" class="chart-point chart-point-income" />
+                                    <text x="50" y="58" class="tooltip-label" text-anchor="middle">$4,100</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="100" cy="110" r="4" class="chart-point chart-point-income" />
+                                    <text x="100" y="98" class="tooltip-label" text-anchor="middle">$2,800</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="150" cy="50" r="4" class="chart-point chart-point-income" />
+                                    <text x="150" y="38" class="tooltip-label" text-anchor="middle">$5,200</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="200" cy="80" r="4" class="chart-point chart-point-income" />
+                                    <text x="200" y="68" class="tooltip-label" text-anchor="middle">$3,800</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="250" cy="30" r="4" class="chart-point chart-point-income" />
+                                    <text x="250" y="18" class="tooltip-label" text-anchor="middle">$6,100</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="300" cy="60" r="4" class="chart-point chart-point-income" />
+                                    <text x="300" y="48" class="tooltip-label" text-anchor="middle">$4,500</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="350" cy="20" r="4" class="chart-point chart-point-income" />
+                                    <text x="350" y="8" class="tooltip-label" text-anchor="middle">$7,000</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="400" cy="50" r="4" class="chart-point chart-point-income" />
+                                    <text x="400" y="38" class="tooltip-label" text-anchor="middle">$5,100</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="450" cy="40" r="4" class="chart-point chart-point-income" />
+                                    <text x="450" y="28" class="tooltip-label" text-anchor="middle">$5,600</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="500" cy="30" r="4" class="chart-point chart-point-income" />
+                                    <text x="500" y="18" class="tooltip-label" text-anchor="middle">$6,300</text>
+                                </g>
+
+                                <g class="point-group">
+                                    <circle cx="0" cy="130" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="0" y="145" class="tooltip-label" text-anchor="middle">$1,800</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="50" cy="120" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="50" y="135" class="tooltip-label" text-anchor="middle">$2,100</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="100" cy="140" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="100" y="155" class="tooltip-label" text-anchor="middle">$1,500</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="150" cy="90" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="150" y="105" class="tooltip-label" text-anchor="middle">$3,200</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="200" cy="110" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="200" y="125" class="tooltip-label" text-anchor="middle">$2,500</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="250" cy="70" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="250" y="85" class="tooltip-label" text-anchor="middle">$3,800</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="300" cy="100" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="300" y="115" class="tooltip-label" text-anchor="middle">$2,900</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="350" cy="60" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="350" y="75" class="tooltip-label" text-anchor="middle">$4,100</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="400" cy="90" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="400" y="105" class="tooltip-label" text-anchor="middle">$3,000</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="450" cy="80" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="450" y="95" class="tooltip-label" text-anchor="middle">$3,400</text>
+                                </g>
+                                <g class="point-group">
+                                    <circle cx="500" cy="70" r="3.5" class="chart-point chart-point-expense" />
+                                    <text x="500" y="85" class="tooltip-label" text-anchor="middle">$3,700</text>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="chart-legend">
+                            <span><span class="legend-dot income"></span> Ingresos</span>
+                            <span><span class="legend-dot expense"></span> Egresos</span>
+                        </div>
+                        <div class="chart-labels">
+                            <span>Sem 1</span><span>Sem 2</span><span>Sem 3</span><span>Sem 4</span>
+                        </div>
+                    </div>
+
+                    <!-- DONUT -->
+                    <div class="card donut-card">
+                        <div class="card-title">Distribución gastos <i class="fas fa-coins"></i></div>
+                        <div class="donut-wrapper">
+                            <div class="donut-svg-container">
+                                <svg viewBox="0 0 40 40" width="100%" height="100%">
+                                    <circle cx="20" cy="20" r="16" fill="transparent" stroke="var(--border-color)" stroke-width="5" />
+                                    <circle cx="20" cy="20" r="16" fill="transparent" stroke="#00E676" stroke-width="5" stroke-dasharray="60 100" stroke-dashoffset="25" />
+                                    <circle cx="20" cy="20" r="16" fill="transparent" stroke="#2d7a5a" stroke-width="5" stroke-dasharray="30 100" stroke-dashoffset="-10" />
+                                    <circle cx="20" cy="20" r="16" fill="transparent" stroke="#3f5a7a" stroke-width="5" stroke-dasharray="20 100" stroke-dashoffset="-40" />
+                                    <circle cx="20" cy="20" r="16" fill="transparent" stroke="#6b4a6b" stroke-width="5" stroke-dasharray="10 100" stroke-dashoffset="-60" />
+                                </svg>
+                            </div>
+                            <div class="donut-legend">
+                                <div class="legend-item"><span class="dot" style="background:#00E676;"></span> Vivienda <span class="value">42%</span></div>
+                                <div class="legend-item"><span class="dot" style="background:#2d7a5a;"></span> Alimentación <span class="value">22%</span></div>
+                                <div class="legend-item"><span class="dot" style="background:#3f5a7a;"></span> Transporte <span class="value">18%</span></div>
+                                <div class="legend-item"><span class="dot" style="background:#6b4a6b;"></span> Ocio <span class="value">18%</span></div>
+                            </div>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-muted); margin-top:12px; border-top:1px solid var(--border-color); padding-top:12px;"><i class="fas fa-circle" style="color:#00E676; font-size:8px;"></i>  Hover para detalles</div>
+                    </div>
+
+                    <!-- METAS DE AHORRO -->
+                    <div class="card goals-card">
+                        <div class="card-title">Progreso de Metas de Ahorro <i class="fas fa-flag-checkered"></i></div>
+                        <div class="goals-grid">
+                            <div class="goal-item">
+                                <div class="goal-header"><span>🏖️ Fondo Vacaciones</span><span class="goal-percent">68%</span></div>
+                                <div class="progress-bar"><div class="progress-fill" style="width:68%;"></div></div>
+                                <div class="goal-amount"><span>$8,200 / $12,000</span><span>+ $1,200 este mes</span></div>
+                            </div>
+                            <div class="goal-item">
+                                <div class="goal-header"><span>🚗 Auto nuevo</span><span class="goal-percent">42%</span></div>
+                                <div class="progress-bar"><div class="progress-fill" style="width:42%;"></div></div>
+                                <div class="goal-amount"><span>$14,600 / $35,000</span><span>+ $3,200 este mes</span></div>
+                            </div>
+                            <div class="goal-item">
+                                <div class="goal-header"><span>📈 Inversión Grow</span><span class="goal-percent">91%</span></div>
+                                <div class="progress-bar"><div class="progress-fill" style="width:91%;"></div></div>
+                                <div class="goal-amount"><span>$45,200 / $50,000</span><span>+ $4,800 este mes</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLA DE MOVIMIENTOS -->
+                    <div class="card transactions-card">
+                        <div class="card-title">
+                            Registro de movimientos
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="transactions-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha registro</th>
+                                        <th>Monto</th>
+                                        <th>Categoría</th>
+                                        <th>Mes</th>
+                                        <th>Tipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="text-muted">#001</span></td>
+                                        <td>2026-06-28</td>
+                                        <td class="font-mono">$3,200.00</td>
+                                        <td>Salario</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-income">Ingreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#002</span></td>
+                                        <td>2026-06-27</td>
+                                        <td class="font-mono">-$450.00</td>
+                                        <td>Supermercado</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-expense">Egreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#003</span></td>
+                                        <td>2026-06-25</td>
+                                        <td class="font-mono">-$1,200.00</td>
+                                        <td>Alquiler</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-expense">Egreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#004</span></td>
+                                        <td>2026-06-20</td>
+                                        <td class="font-mono">+$800.00</td>
+                                        <td>Freelance</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-income">Ingreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#005</span></td>
+                                        <td>2026-06-15</td>
+                                        <td class="font-mono">-$180.00</td>
+                                        <td>Restaurante</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-expense">Egreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#006</span></td>
+                                        <td>2026-06-10</td>
+                                        <td class="font-mono">+$2,500.00</td>
+                                        <td>Dividendos</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-income">Ingreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#007</span></td>
+                                        <td>2026-06-05</td>
+                                        <td class="font-mono">-$320.00</td>
+                                        <td>Ropa</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-expense">Egreso</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#008</span></td>
+                                        <td>2026-06-01</td>
+                                        <td class="font-mono">+$1,000.00</td>
+                                        <td>Ahorro</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-savings">Ahorro</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-muted">#009</span></td>
+                                        <td>2026-06-28</td>
+                                        <td class="font-mono">+$500.00</td>
+                                        <td>Reserva</td>
+                                        <td>Junio</td>
+                                        <td><span class="badge-type badge-emergency">Reserva</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- MODO DÍA / NOCHE ---
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        let isDark = true;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+        
+        window.handleLogin = async function() {
+            const phone = document.getElementById('phone-input').value.trim();
+            if (!phone) return;
+            
+            const btn = document.getElementById('login-btn');
+            btn.textContent = 'Iniciando...';
+            btn.disabled = true;
+            document.getElementById('login-error').style.display = 'none';
+            
+            try {
+                // 1. Obtener email usando el teléfono (via RPC function segura)
+                const { data: email, error: rpcError } = await supabase.rpc('get_email_by_phone', { p_telefono: phone });
+                
+                if (rpcError || !email) {
+                    throw new Error('El número de teléfono no está registrado.');
+                }
+                
+                // 2. Iniciar sesión
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: phone + 'A1!'
+                });
+                
+                if (error) throw new Error('Credenciales incorrectas o hubo un problema de seguridad.');
+                
+                // Exito
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('main-dashboard').style.display = 'block';
+                loadDashboardData(data.user);
+            } catch (err) {
+                const errorEl = document.getElementById('login-error');
+                errorEl.textContent = err.message;
+                errorEl.style.display = 'block';
+            } finally {
+                btn.textContent = 'Entrar al Dashboard';
+                btn.disabled = false;
+            }
+        }
+        
+        // Verifica si ya tiene sesión activa al cargar
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('main-dashboard').style.display = 'block';
+                loadDashboardData(session.user);
+            }
+        });
+        
+        async function loadDashboardData(user) {
+            // Cargar datos reales de la base de datos
+            const { data, error } = await supabase
+                .from('clients')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+                
+            if (data) {
+                // Actualizar nombre
+                const greetingName = document.querySelector('.header-greeting h2 span');
+                if (greetingName) {
+                    // Extraer primer nombre
+                    greetingName.textContent = data.nombre.split(' ')[0];
+                }
+                
+                // Actualizar plan
+                const planBadge = document.querySelector('.plan-badge');
+                if (planBadge && data.plan) {
+                    planBadge.textContent = data.plan.toUpperCase();
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // Theme Logic
+        const themeSelector = document.getElementById('theme-selector');
+        const savedTheme = localStorage.getItem('dashboard-theme') || 'dark';
+        
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (themeSelector) {
+            themeSelector.value = savedTheme;
+            themeSelector.addEventListener('change', (e) => {
+                const newTheme = e.target.value;
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('dashboard-theme', newTheme);
+            });
+        }
+    </script>
+</body>
+</html>

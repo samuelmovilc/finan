@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaS Panel · Licencias</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        :root {
+            --bg-body: #0B0F19;
+            --bg-dashboard: rgba(30, 38, 64, 0.25);
+            --bg-card: rgba(30, 38, 64, 0.4);
+            --text-primary: #E2E8F0;
+            --text-secondary: #8892a8;
+            --text-muted: #5f6a80;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --table-bg: rgba(0, 0, 0, 0.15);
+            --filter-bg: rgba(30, 38, 64, 0.4);
+            --input-bg: rgba(0, 0, 0, 0.2);
+            --btn-bg: rgba(30, 38, 64, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.08);
+            --badge-active: rgba(0, 230, 118, 0.12);
+            --badge-inactive: rgba(248, 113, 113, 0.12);
+            --badge-expired: rgba(248, 113, 113, 0.2);
+            --scrollbar-track: rgba(255, 255, 255, 0.02);
+            --scrollbar-thumb: rgba(255, 255, 255, 0.06);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-dashboard: rgba(255, 255, 255, 0.6);
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --table-bg: rgba(0, 0, 0, 0.04);
+            --filter-bg: rgba(255, 255, 255, 0.5);
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --btn-bg: rgba(255, 255, 255, 0.5);
+            --btn-hover: rgba(0, 230, 118, 0.08);
+            --badge-active: rgba(0, 230, 118, 0.15);
+            --badge-inactive: rgba(248, 113, 113, 0.15);
+            --badge-expired: rgba(248, 113, 113, 0.2);
+            --scrollbar-track: rgba(0, 0, 0, 0.02);
+            --scrollbar-thumb: rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            background: var(--bg-dashboard);
+            backdrop-filter: blur(6px);
+            border-radius: 32px;
+            padding: 20px 24px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        [data-theme="light"] .dashboard {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-left h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        .header-left h1 span {
+            color: #00E676;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-minimal {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 7px 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(4px);
+            text-decoration: none;
+        }
+        .btn-minimal i {
+            font-size: 13px;
+            color: #00E676;
+        }
+        .btn-minimal:hover {
+            border-color: #00E676;
+            background: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+        .btn-minimal.danger i {
+            color: #f87171;
+        }
+        .btn-minimal.danger:hover {
+            border-color: #f87171;
+        }
+        .btn-minimal.support i {
+            color: #60a5fa;
+        }
+        .btn-minimal.support:hover {
+            border-color: #60a5fa;
+        }
+
+        .theme-toggle {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 7px 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .theme-toggle:hover {
+            border-color: #00E676;
+        }
+
+        /* FILTROS */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: var(--filter-bg);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(4px);
+            align-items: center;
+        }
+        .filters-bar .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--input-bg);
+            border-radius: 30px;
+            padding: 4px 12px 4px 14px;
+            border: 1px solid var(--border-color);
+        }
+        .filters-bar .filter-group i {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+        .filters-bar .filter-group input,
+        .filters-bar .filter-group select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            padding: 6px 0;
+            outline: none;
+            min-width: 100px;
+        }
+        .filters-bar .filter-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .filters-bar .filter-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* TARJETAS KPI */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover {
+            border-color: rgba(0, 230, 118, 0.1);
+            transform: translateY(-2px);
+        }
+        .kpi-card .kpi-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .kpi-card .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 4px;
+            color: var(--text-primary);
+        }
+        .kpi-card .kpi-value.positive {
+            color: #00E676;
+        }
+        .kpi-card .kpi-value.negative {
+            color: #f87171;
+        }
+        .kpi-card .kpi-value.neutral {
+            color: #60a5fa;
+        }
+        .kpi-card .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* TABLA CLIENTES - SCROLL CON HEADER FIJO */
+        .table-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+            background: var(--bg-card);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .table-header h3 i {
+            color: #00E676;
+            margin-right: 8px;
+        }
+
+        .table-pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+        .table-pagination select {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+        .table-pagination select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .table-pagination .page-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px 10px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .table-pagination .page-btn:hover {
+            border-color: #00E676;
+            color: #00E676;
+        }
+        .table-pagination .page-btn.active {
+            background: rgba(0, 230, 118, 0.12);
+            border-color: #00E676;
+            color: #00E676;
+        }
+        .table-pagination .page-info {
+            padding: 0 4px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Contenedor con scroll */
+        .table-scroll {
+            max-height: 420px;
+            overflow-y: auto;
+            overflow-x: auto;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+        .table-scroll::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .table-scroll::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 230, 118, 0.15);
+        }
+
+        /* Tabla con header sticky */
+        .clients-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            min-width: 900px;
+        }
+        .clients-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--bg-card);
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .clients-table tbody tr td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .clients-table tbody tr:hover td {
+            background: rgba(0, 230, 118, 0.02);
+        }
+        .clients-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* BADGES */
+        .badge-status {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-active {
+            background: var(--badge-active);
+            color: #00E676;
+        }
+        .badge-inactive {
+            background: var(--badge-inactive);
+            color: #f87171;
+        }
+        .badge-expired {
+            background: var(--badge-expired);
+            color: #f87171;
+        }
+        .badge-soon {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-action:hover {
+            border-color: #00E676;
+            color: #00E676;
+            background: var(--btn-hover);
+        }
+        .btn-action.danger:hover {
+            border-color: #f87171;
+            color: #f87171;
+        }
+        .btn-action i {
+            font-size: 11px;
+        }
+
+        /* GASTOS - mismo sistema */
+        .expenses-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .expense-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: flex-end;
+            background: var(--table-bg);
+        }
+        .expense-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .expense-form .form-group label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .expense-form .form-group input,
+        .expense-form .form-group select {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 6px 12px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            outline: none;
+            min-width: 120px;
+            transition: border 0.2s;
+        }
+        .expense-form .form-group input:focus,
+        .expense-form .form-group select:focus {
+            border-color: #00E676;
+        }
+        .expense-form .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .expense-form .form-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .btn-add {
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 12px;
+            padding: 6px 18px;
+            color: #00E676;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 34px;
+        }
+        .btn-add:hover {
+            background: rgba(0, 230, 118, 0.2);
+            border-color: #00E676;
+        }
+
+        .expenses-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            min-width: 500px;
+        }
+        .expenses-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--bg-card);
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .expenses-table tbody tr td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .expenses-table tbody tr:hover td {
+            background: rgba(0, 230, 118, 0.02);
+        }
+        .expenses-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .btn-delete:hover {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 12px 14px;
+            }
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filters-bar .filter-group {
+                width: 100%;
+            }
+            .filters-bar .filter-group input,
+            .filters-bar .filter-group select {
+                min-width: auto;
+                width: 100%;
+            }
+            .expense-form {
+                flex-direction: column;
+            }
+            .expense-form .form-group {
+                width: 100%;
+            }
+            .expense-form .form-group input,
+            .expense-form .form-group select {
+                min-width: auto;
+                width: 100%;
+            }
+            .header-left h1 {
+                font-size: 18px;
+            }
+            .table-pagination {
+                font-size: 11px;
+            }
+            .table-pagination .page-btn {
+                padding: 2px 8px;
+                font-size: 11px;
+            }
+        }
+        @media (max-width: 500px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .table-scroll {
+                max-height: 300px;
+            }
+        }
+        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .login-overlay.hidden { display: none; }
+        .login-box { background: var(--bg-card); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); text-align: center; max-width: 400px; width: 90%; backdrop-filter: blur(8px); }
+        .login-box h2 { margin-bottom: 24px; color: var(--text-primary); font-size: 24px; }
+        .login-box p { color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; }
+        .login-box input { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: var(--text-primary); margin-bottom: 16px; font-size: 16px; text-align: center; }
+        [data-theme="light"] .login-box input { background: rgba(255,255,255,0.6); }
+        .login-box button { width: 100%; padding: 16px; border-radius: 12px; background: #00E676; color: #000; font-weight: 600; border: none; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
+        .login-box button:hover { background: #00c853; }
+        #login-error { color: #f87171; margin-top: 14px; font-size: 14px; display: none; }
+    </style>
+</head>
+<body>
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Panel SaaS</h2>
+            <p>Acceso administrativo</p>
+            <input type="email" id="admin-email" placeholder="Email" value="admin@admin.com">
+            <input type="password" id="admin-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') handleAdminLogin()">
+            <button id="login-btn" onclick="handleAdminLogin()">Entrar al Panel</button>
+            <div id="login-error"></div>
+        </div>
+    </div>
+    <div class="dashboard" id="main-dashboard" style="display:none;">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <h1><span>SaaS</span> Panel</h1>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <span class="btn-minimal" style="pointer-events:none;opacity:0.6;">
+                        <i class="fas fa-crown"></i> Premium
+                    </span>
+                    <span class="btn-minimal" style="pointer-events:none;opacity:0.6;">
+                        <i class="fas fa-calendar-alt"></i> 01/01/2026 - 31/12/2026
+                    </span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="https://wa.me/573002397590?text=Hola,%20deseo%20activar%20mi%20licencia" target="_blank" class="btn-minimal">
+                    <i class="fab fa-whatsapp"></i> Activar
+                </a>
+                <a href="https://wa.me/573002397590?text=Hola,%20necesito%20soporte" target="_blank" class="btn-minimal support">
+                    <i class="fas fa-headset"></i> Soporte
+                </a>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Ingresos del mes</div>
+                <div class="kpi-value positive" id="kpiIngresos">$1,890.50</div>
+                <div class="kpi-sub">+12% vs mes anterior</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Egresos del mes</div>
+                <div class="kpi-value negative" id="kpiEgresos">$847.00</div>
+                <div class="kpi-sub">+3% vs mes anterior</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Ganancias</div>
+                <div class="kpi-value neutral" id="kpiGanancias">$1,043.50</div>
+                <div class="kpi-sub">+18% vs mes anterior</div>
+            </div>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar por teléfono..." id="searchPhone" />
+            </div>
+            <div class="filter-group">
+                <i class="fas fa-filter"></i>
+                <select id="filterStatus">
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="vencido">Vencido</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <i class="fas fa-clock"></i>
+                <select id="filterExpiry">
+                    <option value="">Todos</option>
+                    <option value="soon">Próximos a vencer</option>
+                    <option value="7days">Vence en 7 días</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <i class="fas fa-calendar-year"></i>
+                <select id="filterYear">
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <i class="fas fa-calendar-day"></i>
+                <select id="filterMonth">
+                    <option value="6">Junio</option>
+                    <option value="5">Mayo</option>
+                    <option value="4">Abril</option>
+                    <option value="3">Marzo</option>
+                    <option value="2">Febrero</option>
+                    <option value="1">Enero</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- TABLA CLIENTES -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3><i class="fas fa-users"></i> Clientes</h3>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    <button class="btn-minimal" onclick="addClient()">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                    <div class="table-pagination">
+                        <span>Mostrar</span>
+                        <select id="clientsPerPage" onchange="renderClients()">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <button class="page-btn" onclick="changeClientPage(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <span class="page-info" id="clientPageInfo">1 / 1</span>
+                        <button class="page-btn" onclick="changeClientPage(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-scroll" id="clientScroll">
+                <table class="clients-table" id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Teléfono</th>
+                            <th>Nombre</th>
+                            <th>Plan</th>
+                            <th>Estado</th>
+                            <th>Fecha inicio</th>
+                            <th>Fecha fin</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientsBody">
+                        <!-- Datos insertados por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECCIÓN GASTOS -->
+        <div class="expenses-section">
+            <div class="table-header">
+                <h3><i class="fas fa-receipt"></i> Gastos y recordatorios</h3>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                    <span style="font-size:12px;color:var(--text-muted);">Agrega gastos con categoría y fecha de vencimiento</span>
+                    <div class="table-pagination">
+                        <span>Mostrar</span>
+                        <select id="expensesPerPage" onchange="renderExpenses()">
+                            <option value="10">10</option>
+                            <option value="25" selected>25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <button class="page-btn" onclick="changeExpensePage(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <span class="page-info" id="expensePageInfo">1 / 1</span>
+                        <button class="page-btn" onclick="changeExpensePage(1)"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de gasto -->
+            <div class="expense-form">
+                <div class="form-group">
+                    <label>Concepto</label>
+                    <input type="text" id="expConcept" placeholder="Ej. VPS, Publicidad..." />
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="expCategory">
+                        <option value="VPS">VPS / Hosting</option>
+                        <option value="Publicidad">Publicidad</option>
+                        <option value="Suscripción">Suscripción</option>
+                        <option value="Herramientas">Herramientas</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monto ($)</label>
+                    <input type="number" id="expAmount" placeholder="0.00" step="0.01" />
+                </div>
+                <div class="form-group">
+                    <label>Fecha vencimiento</label>
+                    <input type="date" id="expDate" />
+                </div>
+                <div class="form-group">
+                    <label>¿Vence?</label>
+                    <select id="expHasDue">
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <button class="btn-add" onclick="addExpense()">
+                    <i class="fas fa-plus"></i> Agregar
+                </button>
+            </div>
+
+            <!-- Tabla de gastos con scroll -->
+            <div class="table-scroll" id="expenseScroll" style="max-height:300px;">
+                <table class="expenses-table" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Categoría</th>
+                            <th>Monto</th>
+                            <th>Fecha vencimiento</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesBody">
+                        <!-- Datos insertados por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. DATOS INICIALES (500 clientes de prueba + gastos)
+        // ============================================================
+        const PLANES = ['Mensual (10.9$)', 'Anual (99$)', '5 años (199$)'];
+        const NOMBRES = ['Juan Pérez', 'María Gómez', 'Carlos Ruiz', 'Ana Torres', 'Luis Méndez',
+            'Sofía Ramírez', 'Diego Castro', 'Valentina Ortiz', 'Andrés Herrera', 'Laura Jiménez',
+            'Miguel Ángel', 'Paula Díaz', 'Jorge Morales', 'Camila Rojas', 'David Sánchez',
+            'Daniela Flores', 'Alejandro Vargas', 'Natalia Cruz', 'Fernando Reyes', 'Adriana Peña',
+            'Gabriel Molina', 'Isabella Castro', 'Mateo Ríos', 'Renata Salazar', 'Sebastián Romero'
+        ];
+
+        function generateClients(count = 500) {
+            const clients = [];
+            const today = new Date();
+            for (let i = 1; i <= count; i++) {
+                const nombre = NOMBRES[i % NOMBRES.length] + (i > NOMBRES.length ? ' ' + Math.ceil(i / NOMBRES.length) : '');
+                const plan = PLANES[i % 3];
+                const estado = i % 5 === 0 ? 'inactivo' : i % 7 === 0 ? 'vencido' : 'activo';
+                const inicio = new Date(today);
+                inicio.setDate(inicio.getDate() - Math.floor(Math.random() * 365));
+                const fin = new Date(inicio);
+                fin.setMonth(fin.getMonth() + (plan.includes('Mensual') ? 1 : plan.includes('Anual') ? 12 : 60));
+
+                clients.push({
+                    id: i,
+                    telefono: `57300${String(1000000 + i).padStart(7, '0')}`,
+                    nombre: nombre,
+                    plan: plan,
+                    estado: estado,
+                    fechaInicio: inicio.toISOString().split('T')[0],
+                    fechaFin: fin.toISOString().split('T')[0]
+                });
+            }
+            return clients;
+        }
+
+        let clients = generateClients(500);
+        let expenses = [
+            { id: 1, concepto: 'VPS DigitalOcean', categoria: 'VPS', monto: 45.00, fechaVencimiento: '2026-07-15',
+            hasDue: true },
+            { id: 2, concepto: 'Google Ads', categoria: 'Publicidad', monto: 120.00, fechaVencimiento: '', hasDue: false },
+            { id: 3, concepto: 'Suscripción Notion', categoria: 'Suscripción', monto: 12.00, fechaVencimiento: '2026-06-30',
+                hasDue: true },
+            { id: 4, concepto: 'Dominio .com', categoria: 'VPS', monto: 15.00, fechaVencimiento: '2026-08-10',
+            hasDue: true },
+            { id: 5, concepto: 'Meta Ads', categoria: 'Publicidad', monto: 200.00, fechaVencimiento: '2026-07-20',
+                hasDue: true },
+            { id: 6, concepto: 'AWS EC2', categoria: 'VPS', monto: 89.00, fechaVencimiento: '2026-08-01', hasDue: true },
+        ];
+
+        let nextExpenseId = 7;
+        let currentTheme = 'dark';
+
+        // ============================================================
+        // 2. PAGINACIÓN - CLIENTES
+        // ============================================================
+        let clientPage = 1;
+        let clientPerPage = 25;
+        let filteredClients = [];
+
+        function getFilteredClients() {
+            const search = document.getElementById('searchPhone').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : '';
+        }
+        
+        // Las funciones mock se reemplazan por Supabase.
+        window.changeClientPage = function(dir) { console.log('Paginacion mock'); }
+        window.renderClients = function() { console.log('Manejado por Supabase'); }
+        window.renderExpenses = function() { console.log('Render expenses'); }
+        window.changeExpensePage = function() { console.log('change exp page'); }
+        window.addClient = function() { alert('Agregar cliente desde el formulario web'); }
+        window.addExpense = function() { alert('Gasto agregado (mock)'); }
+    </script>
+    <script type="module">
+        import { supabase } from './supabaseClient.js';
+        
+        window.handleAdminLogin = async function() {
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value.trim();
+            if (!email || !password) return;
+            
+            const btn = document.getElementById('login-btn');
+            btn.textContent = 'Iniciando...';
+            btn.disabled = true;
+            document.getElementById('login-error').style.display = 'none';
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw new Error('Credenciales incorrectas.');
+                if (email !== 'admin@admin.com') throw new Error('No tienes permisos de administrador.');
+                
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('main-dashboard').style.display = 'block';
+                loadClients();
+            } catch (err) {
+                const errorEl = document.getElementById('login-error');
+                errorEl.textContent = err.message;
+                errorEl.style.display = 'block';
+            } finally {
+                btn.textContent = 'Entrar al Panel';
+                btn.disabled = false;
+            }
+        }
+        
+        async function loadClients() {
+            const tbody = document.getElementById('clientsBody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando...</td></tr>';
+            
+            const { data, error } = await supabase.from('clients').select('*').order('fecha_registro', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
+                return;
+            }
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay clientes</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.map(c => `
+                <tr>
+                    <td>...${(c.id||'').substring(0,6)}</td>
+                    <td>${c.telefono||'-'}</td>
+                    <td>${c.nombre||'-'}</td>
+                    <td><span class="badge-type" style="background:rgba(167,139,250,0.12);color:#a78bfa;">${(c.plan||'-').toUpperCase()}</span></td>
+                    <td><span class="badge-type ${c.estado === 'activo' ? 'badge-income' : 'badge-expense'}">${(c.estado||'').toUpperCase()}</span></td>
+                    <td>${c.fecha_inicio||'-'}</td>
+                    <td>${c.fecha_registro||'-'}</td>
+                    <td><button class="btn-delete"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('kpiIngresos').textContent = data.length;
+            document.getElementById('kpiIngresos').previousElementSibling.textContent = 'Total Clientes';
+            const activos = data.filter(c => c.estado === 'activo').length;
+            document.getElementById('kpiGanancias').textContent = activos;
+            document.getElementById('kpiGanancias').previousElementSibling.textContent = 'Activos';
+            document.getElementById('clientPageInfo').textContent = `1 / 1 (${data.length})`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session && session.user.email === 'admin@admin.com') {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('main-dashboard').style.display = 'block';
+                loadClients();
+            } else {
+                document.getElementById('login-overlay').classList.remove('hidden');
+                document.getElementById('main-dashboard').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
