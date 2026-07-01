@@ -653,7 +653,7 @@
         <div class="login-box">
             <h2>Panel SaaS</h2>
             <p>Acceso administrativo</p>
-            <input type="email" id="admin-email" placeholder="Email" value="admin@admin.com">
+            <input type="email" id="admin-email" placeholder="Email" value="bettercomput@gmail.com">
             <input type="password" id="admin-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') handleAdminLogin()">
             <button id="login-btn" onclick="handleAdminLogin()">Entrar al Panel</button>
             <div id="login-error"></div>
@@ -959,7 +959,7 @@
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw new Error('Credenciales incorrectas.');
-                if (email !== 'admin@admin.com') throw new Error('No tienes permisos de administrador.');
+                if (email !== 'bettercomput@gmail.com') throw new Error('No tienes permisos de administrador.');
                 
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('main-dashboard').style.display = 'block';
@@ -1012,7 +1012,7 @@
         
         document.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (session && session.user.email === 'admin@admin.com') {
+            if (session && session.user.email === 'bettercomput@gmail.com') {
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('main-dashboard').style.display = 'block';
                 loadClients();
