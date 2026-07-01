@@ -664,26 +664,9 @@
         <header class="header">
             <div class="header-left">
                 <h1><span>SaaS</span> Panel</h1>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <span class="btn-minimal" style="pointer-events:none;opacity:0.6;">
-                        <i class="fas fa-crown"></i> Premium
-                    </span>
-                    <span class="btn-minimal" style="pointer-events:none;opacity:0.6;">
-                        <i class="fas fa-calendar-alt"></i> 01/01/2026 - 31/12/2026
-                    </span>
-                </div>
+                
             </div>
-            <div class="header-right">
-                <a href="https://wa.me/573002397590?text=Hola,%20deseo%20activar%20mi%20licencia" target="_blank" class="btn-minimal">
-                    <i class="fab fa-whatsapp"></i> Activar
-                </a>
-                <a href="https://wa.me/573002397590?text=Hola,%20necesito%20soporte" target="_blank" class="btn-minimal support">
-                    <i class="fas fa-headset"></i> Soporte
-                </a>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
-            </div>
+            <div class="header-right"></div>
         </header>
 
         <!-- KPI CARDS -->
@@ -941,7 +924,83 @@
         window.renderExpenses = function() { console.log('Render expenses'); }
         window.changeExpensePage = function() { console.log('change exp page'); }
         window.addClient = function() { alert('Agregar cliente desde el formulario web'); }
-        window.addExpense = function() { alert('Gasto agregado (mock)'); }
+        
+        async function loadExpenses() {
+            const tbody = document.getElementById('expensesBody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando gastos...</td></tr>';
+            
+            const { data, error } = await supabase.from('admin_expenses').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
+                return;
+            }
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay gastos registrados</td></tr>';
+                return;
+            }
+            
+            let totalExpenses = 0;
+            
+            tbody.innerHTML = data.map(e => {
+                totalExpenses += parseFloat(e.monto) || 0;
+                return `
+                <tr>
+                    <td>${e.concepto}</td>
+                    <td>${e.categoria}</td>
+                    <td>${parseFloat(e.monto).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td><span class="badge-type ${e.vence ? 'badge-expense' : 'badge-income'}">${e.fecha_vencimiento}</span></td>
+                    <td><button class="btn-delete" onclick="deleteExpense('${e.id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `}).join('');
+            
+            // Update Top Card (Egresos del mes)
+            const kpiEgresos = document.getElementById('kpiEgresos');
+            if(kpiEgresos) {
+                kpiEgresos.textContent = `${totalExpenses.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            }
+        }
+        
+        window.deleteExpense = async function(id) {
+            if(!confirm('¿Seguro que deseas eliminar este gasto?')) return;
+            await supabase.from('admin_expenses').delete().eq('id', id);
+            loadExpenses();
+        }
+
+        window.addExpense = async function() { 
+            const btn = document.querySelector('.btn-add');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';
+            btn.disabled = true;
+            
+            const concepto = document.getElementById('expConcept').value.trim();
+            const categoria = document.getElementById('expCategory').value;
+            const monto = document.getElementById('expAmount').value;
+            const fecha_vencimiento = document.getElementById('expDate').value;
+            const vence = document.getElementById('expHasDue').value === '1';
+            
+            if(!concepto || !monto || !fecha_vencimiento) {
+                alert('Por favor completa Concepto, Monto y Fecha.');
+                btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+                btn.disabled = false;
+                return;
+            }
+            
+            const { error } = await supabase.from('admin_expenses').insert([{
+                concepto, categoria, monto, fecha_vencimiento, vence
+            }]);
+            
+            btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
+            btn.disabled = false;
+            
+            if(error) {
+                alert('Error al guardar: ' + error.message);
+            } else {
+                document.getElementById('expConcept').value = '';
+                document.getElementById('expAmount').value = '';
+                document.getElementById('expDate').value = '';
+                loadExpenses();
+            }
+        }
     </script>
     <script type="module">
         import { supabase } from './supabaseClient.js';
@@ -964,6 +1023,7 @@
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('main-dashboard').style.display = 'block';
                 loadClients();
+                loadExpenses();
             } catch (err) {
                 const errorEl = document.getElementById('login-error');
                 errorEl.textContent = err.message;
@@ -1016,6 +1076,7 @@
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('main-dashboard').style.display = 'block';
                 loadClients();
+                loadExpenses();
             } else {
                 document.getElementById('login-overlay').classList.remove('hidden');
                 document.getElementById('main-dashboard').style.display = 'none';
