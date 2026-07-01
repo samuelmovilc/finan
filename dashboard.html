@@ -879,11 +879,11 @@
                             <span class="plan-badge">Premium</span>
                             <div class="plan-dates">
                                 <i class="fas fa-calendar-plus"></i>
-                                <span>Inicio:</span> 01/01/2026
+                                <span>Inicio:</span> <span id="plan-start">--/--/----</span>
                             </div>
                             <div class="plan-dates">
                                 <i class="fas fa-calendar-check"></i>
-                                <span>Fin:</span> 31/12/2026
+                                <span>Fin:</span> <span id="plan-end">--/--/----</span>
                             </div>
                         </div>
                     </div>
@@ -1134,6 +1134,12 @@
                 
                 const planBadge = document.querySelector('.plan-badge');
                 if (planBadge && clientData.plan) planBadge.textContent = clientData.plan.toUpperCase();
+                
+                const planStartEl = document.getElementById('plan-start');
+                if (planStartEl && clientData.fecha_inicio) planStartEl.textContent = clientData.fecha_inicio;
+                
+                const planEndEl = document.getElementById('plan-end');
+                if (planEndEl && clientData.fecha_fin) planEndEl.textContent = clientData.fecha_fin;
             }
 
             // 2. Cargar Transacciones Reales
