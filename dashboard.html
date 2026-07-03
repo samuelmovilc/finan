@@ -1151,20 +1151,27 @@
 
         // ── BARRAS ─────────────────────────────────────────────────────
         function renderBars(tx){
-            let inc=0, exp=0, sav=0;
+            let inc=0, exp=0, sav=0, res=0;
             tx.forEach(t=>{
                 const v = parseFloat(t.valor)||0;
-                if((t.tipo||'').toLowerCase()==='ingreso') inc+=v; else exp+=v;
-                if((t.categoria||'').toLowerCase()==='ahorro') sav+=v;
+                const c = (t.categoria||'').toLowerCase();
+                
+                if((t.tipo||'').toLowerCase()==='ingreso') inc+=v; 
+                else exp+=v;
+                
+                if(c==='ahorro') sav+=v;
+                if(c.includes('reserva') || c.includes('imprevisto')) res+=v;
             });
+            
             const bal = Math.max(0, inc-exp);
-            const res = inc*0.1;
             const mx = Math.max(inc,exp,bal,sav,res,1);
+            
             document.getElementById('val-ingresos').textContent = fmtCOP(inc);
             document.getElementById('val-egresos').textContent = fmtCOP(exp);
             document.getElementById('val-balance').textContent = fmtCOP(bal);
             document.getElementById('val-ahorros').textContent = fmtCOP(sav);
             document.getElementById('val-reserva').textContent = fmtCOP(res);
+            
             document.getElementById('bar-ingresos').style.width = (inc/mx*100)+'%';
             document.getElementById('bar-egresos').style.width = (exp/mx*100)+'%';
             document.getElementById('bar-balance').style.width = (bal/mx*100)+'%';
@@ -1245,7 +1252,8 @@
                 const xi2=cx+r*Math.cos(angle), yi2=cy+r*Math.sin(angle);
                 const lg=a>Math.PI?1:0;
                 const col=getCatColor(cat);
-                paths+=`<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 ${lg},1 ${x2.toFixed(2)},${y2.toFixed(2)} L${xi2.toFixed(2)},${yi2.toFixed(2)} A${r},${r} 0 ${lg},0 ${xi1.toFixed(2)},${yi1.toFixed(2)} Z" fill="${col}" opacity="0.9"/>`;
+                const tooltipText = `${cat}\\n${(pct*100).toFixed(1)}% - ${fmtCOP(val)}`;
+                paths+=`<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 ${lg},1 ${x2.toFixed(2)},${y2.toFixed(2)} L${xi2.toFixed(2)},${yi2.toFixed(2)} A${r},${r} 0 ${lg},0 ${xi1.toFixed(2)},${yi1.toFixed(2)} Z" fill="${col}" opacity="0.9" style="cursor:pointer; transition: opacity 0.2s;" onmouseenter="this.style.opacity=1; showTT(event,'${tooltipText}')" onmouseleave="this.style.opacity=0.9; hideTT()"/>`;
                 legend+=`<div class="legend-item"><span class="dot" style="background:${col}"></span><span>${cat}</span><span class="value">${(pct*100).toFixed(0)}%</span></div>`;
             });
             const svg=document.getElementById('donutSvg');
