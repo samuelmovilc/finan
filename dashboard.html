@@ -851,6 +851,27 @@
         }
         .login-box button:hover { background: #00c853; }
         #login-error { color: #f87171; margin-top: 14px; font-size: 14px; display: none; }
+        #login-msg { margin-top: 14px; font-size: 14px; display: none; font-weight: 600; }
+        #login-msg.ok { color: #00E676; display: block; }
+        #login-msg.fail { color: #f87171; display: block; }
+        /* Tooltip flotante SVG */
+        .tt {
+            position: fixed;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: var(--text-primary);
+            pointer-events: none;
+            display: none;
+            white-space: nowrap;
+            z-index: 10000;
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow-card);
+        }
+        [data-theme="pink"] .legend-dot.income,
+        [data-theme="pink"] .bar-fill.income { background: linear-gradient(90deg,#ec4899,#f9a8d4); }
     </style>
 </head>
 <body>
@@ -860,9 +881,13 @@
             <p>Ingresa el número de teléfono con el que te registraste para acceder a tu panel.</p>
             <input type="tel" id="phone-input" placeholder="Ej: 573001234567" onkeydown="if(event.key==='Enter') handleLogin()">
             <button id="login-btn" onclick="handleLogin()">Entrar al Dashboard</button>
+            <div id="login-msg"></div>
             <div id="login-error"></div>
         </div>
     </div>
+
+    <!-- Tooltip flotante para gráficos -->
+    <div class="tt" id="tooltip"></div>
     
     <div class="dashboard" id="main-dashboard" style="display: none;">
         <div class="app-layout">
@@ -902,8 +927,8 @@
                                 <i class="fas fa-sync-alt" id="sync-icon"></i> Sincronizar
                             </button>
                             <div class="filter-group">
-                                <i class="fas fa-calendar-year"></i>
-                                <select id="yearFilter">
+                                <i class="fas fa-calendar-alt"></i>
+                                <select id="yearFilter" onchange="refreshAll()">
                                     <option value="2026">2026</option>
                                     <option value="2025">2025</option>
                                     <option value="2024">2024</option>
@@ -911,23 +936,28 @@
                             </div>
                             <div class="filter-group">
                                 <i class="fas fa-calendar-day"></i>
-                                <select id="monthFilter">
-                                    <option value="6">Junio</option>
-                                    <option value="5">Mayo</option>
-                                    <option value="4">Abril</option>
-                                    <option value="3">Marzo</option>
-                                    <option value="2">Febrero</option>
-                                    <option value="1">Enero</option>
+                                <select id="monthFilter" onchange="refreshAll()">
+                                    <option value="1">Enero</option><option value="2">Febrero</option>
+                                    <option value="3">Marzo</option><option value="4">Abril</option>
+                                    <option value="5">Mayo</option><option value="6">Junio</option>
+                                    <option value="7">Julio</option><option value="8">Agosto</option>
+                                    <option value="9">Septiembre</option><option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option><option value="12">Diciembre</option>
                                 </select>
                             </div>
-                            <div class="date-range">
-                                <i class="fas fa-calendar-week"></i> 01 Jun – 30 Jun
-                                <i class="fas fa-chevron-down" style="font-size:10px; margin-left: 4px; opacity:0.5;"></i>
-                            </div>
                         </div>
-                        <!-- BOTÓN DÍA/NOCHE -->
-                        <button class="theme-toggle" id="themeToggle">
-                            <i class="fas fa-moon" id="themeIcon"></i>
+                        <!-- SELECTOR DE TEMA (3 temas) -->
+                        <div class="filter-group">
+                            <i class="fas fa-palette" style="color:#00E676;"></i>
+                            <select id="themeSelect" onchange="setTheme(this.value)">
+                                <option value="dark">🌙 Oscuro</option>
+                                <option value="light">☀️ Claro</option>
+                                <option value="pink">🌸 Rosado</option>
+                            </select>
+                        </div>
+                        <!-- CERRAR SESIÓN -->
+                        <button class="btn-minimal" onclick="doLogout()" style="border-color: rgba(248,113,113,0.3);">
+                            <i class="fas fa-sign-out-alt" style="color:#f87171;"></i> <span>Salir</span>
                         </button>
                     </div>
                 </header>
@@ -994,30 +1024,45 @@
 
                     <!-- GRÁFICO FLUJO DE CAJA -->
                     <div class="card cashflow-card">
-                        <div class="card-title">Flujo de Caja · mensual <i class="fas fa-chart-simple"></i></div>
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:150px; color:var(--text-muted); opacity:0.7; font-size: 14px;">
-                                <i class="fas fa-chart-line" style="font-size: 24px; margin-bottom: 10px;"></i>
-                                <span>Aún no hay datos para graficar tu flujo</span>
-                            </div>
+                        <div class="card-title">Flujo de Caja · diario acumulado <i class="fas fa-chart-simple"></i></div>
+                        <div class="chart-container">
+                            <svg id="cashflowSvg" viewBox="0 0 600 150" preserveAspectRatio="none"></svg>
+                        </div>
+                        <div class="chart-labels" id="cashflowLabels"></div>
+                        <div class="chart-legend">
+                            <span><span class="legend-dot income"></span>Ingresos</span>
+                            <span><span class="legend-dot expense"></span>Egresos</span>
+                        </div>
                     </div>
 
                     <!-- DONUT -->
                     <div class="card donut-card">
                         <div class="card-title">Distribución gastos <i class="fas fa-coins"></i></div>
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:180px; color:var(--text-muted); opacity:0.7; font-size: 14px;">
-                                <i class="fas fa-chart-pie" style="font-size: 24px; margin-bottom: 10px;"></i>
-                                <span>No tienes suficientes gastos clasificados</span>
+                        <div class="donut-wrapper">
+                            <div class="donut-svg-container">
+                                <svg id="donutSvg" viewBox="0 0 110 110"></svg>
                             </div>
+                            <div class="donut-legend" id="donutLegend"></div>
+                        </div>
                     </div>
 
                     <!-- METAS DE AHORRO -->
                     <div class="card goals-card">
                         <div class="card-title">Progreso de Metas de Ahorro <i class="fas fa-flag-checkered"></i></div>
-                        <div class="goals-grid" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 40px 0; color:var(--text-muted); opacity:0.7; font-size: 14px;">
-                                <i class="fas fa-bullseye" style="font-size: 24px; margin-bottom: 10px;"></i>
-                                <span>Próximamente: Metas de ahorro inteligentes</span>
+                        <div class="goals-grid">
+                            <div class="goal-item">
+                                <div class="goal-header"><span id="metaNombre">Mi meta de ahorro</span><span class="goal-percent" id="metaPct">0%</span></div>
+                                <div class="progress-bar"><div class="progress-fill" id="metaFill" style="width:0%"></div></div>
+                                <div class="goal-amount"><span>Ahorrado: <strong id="metaActual">$0</strong></span><span>Meta: <strong id="metaTotal">$0</strong></span></div>
+                            </div>
+                            <div class="goal-item" style="display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; opacity:0.5;">
+                                <i class="fas fa-lock" style="font-size:22px;"></i><span style="font-size:13px;">Próxima meta</span>
+                            </div>
+                            <div class="goal-item" style="display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; opacity:0.5;">
+                                <i class="fas fa-lock" style="font-size:22px;"></i><span style="font-size:13px;">Próxima meta</span>
                             </div>
                         </div>
+                    </div>
 
                     <!-- TABLA DE MOVIMIENTOS -->
                     <div class="card transactions-card">
@@ -1031,6 +1076,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Fecha registro</th>
+                                        <th>Descripción</th>
                                         <th>Monto</th>
                                         <th>Categoría</th>
                                         <th>Mes</th>
@@ -1038,7 +1084,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="transactions-body">
-                                    <tr><td colspan="6" style="text-align:center; padding: 20px;">Cargando movimientos...</td></tr>
+                                    <tr><td colspan="7" style="text-align:center; padding: 20px;">Cargando movimientos...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1049,25 +1095,234 @@
     </div>
 
     <script>
-        // --- MODO DÍA / NOCHE ---
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        let isDark = true;
+        // ── TEMA (3 temas, persistente) ──────────────────────────────
+        function setTheme(t){
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('dashboard-theme', t);
+            const sel = document.getElementById('themeSelect');
+            if (sel) sel.value = t;
+        }
+        window.setTheme = setTheme;
+        (function(){ setTheme(localStorage.getItem('dashboard-theme') || 'dark'); })();
 
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
-            if (isDark) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                themeIcon.className = 'fas fa-moon';
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                themeIcon.className = 'fas fa-sun';
+        // ── FORMATO ───────────────────────────────────────────────────
+        const fmtCOP = n => new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
+
+        // ── DATOS GLOBALES ────────────────────────────────────────────
+        let allTx = [];
+        let clientData = {};
+        const CAT_COLORS = {'Alimentación':'#f87171','Vivienda':'#60a5fa','Servicios':'#fbbf24','Transporte':'#a78bfa','Ahorro':'#34d399','Educación':'#fb923c','Salud':'#f472b6','Ocio':'#818cf8','Familia':'#e879f9','Deudas':'#f43f5e','Vacaciones':'#2dd4bf','Extra':'#00E676','Salario':'#00E676','Otros':'#94a3b8'};
+        function getCatColor(cat){
+            return CAT_COLORS[cat] || (CAT_COLORS[cat]=`hsl(${(cat.charCodeAt(0)*37)%360},65%,60%)`);
+        }
+
+        // ── PARSER DE FECHA (seguro para zona horaria) ────────────────
+        // new Date("2026-06-01") se interpreta como UTC y en Colombia (UTC-5)
+        // retrocede al día anterior. Aquí construimos la fecha en hora local.
+        function parseDate(s){
+            if(!s) return null;
+            const m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if(m) return new Date(+m[1],+m[2]-1,+m[3]);
+            const d = new Date(s);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        // ── FILTRAR TX POR MES/AÑO ────────────────────────────────────
+        function getFiltered(){
+            const yr = parseInt(document.getElementById('yearFilter').value);
+            const mo = parseInt(document.getElementById('monthFilter').value);
+            return allTx.filter(tx=>{
+                const d = parseDate(tx.fecha);
+                if(!d) return false;
+                return d.getFullYear()===yr && (d.getMonth()+1)===mo;
+            });
+        }
+
+        // ── REFRESH ALL ───────────────────────────────────────────────
+        function refreshAll(){
+            const tx = getFiltered();
+            renderBars(tx);
+            renderCashflow(tx);
+            renderDonut(tx);
+            renderMeta(tx);
+            renderTable(tx);
+        }
+        window.refreshAll = refreshAll;
+
+        // ── BARRAS ─────────────────────────────────────────────────────
+        function renderBars(tx){
+            let inc=0, exp=0, sav=0;
+            tx.forEach(t=>{
+                const v = parseFloat(t.valor)||0;
+                if((t.tipo||'').toLowerCase()==='ingreso') inc+=v; else exp+=v;
+                if((t.categoria||'').toLowerCase()==='ahorro') sav+=v;
+            });
+            const bal = Math.max(0, inc-exp);
+            const res = inc*0.1;
+            const mx = Math.max(inc,exp,bal,sav,res,1);
+            document.getElementById('val-ingresos').textContent = fmtCOP(inc);
+            document.getElementById('val-egresos').textContent = fmtCOP(exp);
+            document.getElementById('val-balance').textContent = fmtCOP(bal);
+            document.getElementById('val-ahorros').textContent = fmtCOP(sav);
+            document.getElementById('val-reserva').textContent = fmtCOP(res);
+            document.getElementById('bar-ingresos').style.width = (inc/mx*100)+'%';
+            document.getElementById('bar-egresos').style.width = (exp/mx*100)+'%';
+            document.getElementById('bar-balance').style.width = (bal/mx*100)+'%';
+            document.getElementById('bar-ahorros').style.width = (sav/mx*100)+'%';
+            document.getElementById('bar-reserva').style.width = (res/mx*100)+'%';
+        }
+
+        // ── CASHFLOW DIARIO ACUMULADO ─────────────────────────────────
+        function renderCashflow(tx){
+            const yr = parseInt(document.getElementById('yearFilter').value);
+            const mo = parseInt(document.getElementById('monthFilter').value);
+            const daysInMonth = new Date(yr,mo,0).getDate();
+            const incByDay = Array(daysInMonth+1).fill(0);
+            const expByDay = Array(daysInMonth+1).fill(0);
+            tx.forEach(t=>{
+                const d = parseDate(t.fecha);
+                if(!d) return;
+                const day = d.getDate();
+                const v = parseFloat(t.valor)||0;
+                if((t.tipo||'').toLowerCase()==='ingreso') incByDay[day]+=v; else expByDay[day]+=v;
+            });
+            const incPts=[], expPts=[];
+            let cumInc=0, cumExp=0;
+            for(let d=1; d<=daysInMonth; d++){ cumInc+=incByDay[d]; cumExp+=expByDay[d]; incPts.push(cumInc); expPts.push(cumExp); }
+            const maxVal = Math.max(...incPts,...expPts,1);
+            const W=600,H=140,padL=8,padR=8,padT=10,padB=10;
+            const xStep=(W-padL-padR)/(daysInMonth-1||1);
+            const toX=i=>padL+i*xStep;
+            const toY=v=>padT+(1-(v/maxVal))*(H-padT-padB);
+            let incLine='', expLine='';
+            for(let i=0;i<daysInMonth;i++){
+                incLine+=`${toX(i).toFixed(1)},${toY(incPts[i]).toFixed(1)} `;
+                expLine+=`${toX(i).toFixed(1)},${toY(expPts[i]).toFixed(1)} `;
             }
-        });
+            function buildArea(pts,color){
+                let path=`M ${toX(0).toFixed(1)},${toY(pts[0]).toFixed(1)} `;
+                for(let i=1;i<daysInMonth;i++) path+=`L ${toX(i).toFixed(1)},${toY(pts[i]).toFixed(1)} `;
+                path+=`L ${toX(daysInMonth-1).toFixed(1)},${H-padB} L ${toX(0).toFixed(1)},${H-padB} Z`;
+                return `<path d="${path}" fill="${color}" fill-opacity="0.07"/>`;
+            }
+            function buildPoints(pts,color,tipo){
+                return pts.map((v,i)=>`<circle cx="${toX(i).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="4" fill="${color}" opacity="0.85" style="cursor:pointer;" onmouseenter="showTT(event,'Día ${i+1}\\n${tipo}: ${fmtCOP(v)}')" onmouseleave="hideTT()"/>`).join('');
+            }
+            let grid='';
+            for(let g=0;g<=4;g++){
+                const y=(padT+(g/4)*(H-padT-padB)).toFixed(1);
+                grid+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="currentColor" stroke-opacity="0.05" stroke-width="1"/>`;
+            }
+            document.getElementById('cashflowSvg').innerHTML=`
+                ${grid}
+                ${buildArea(incPts,'#00E676')}
+                ${buildArea(expPts,'#f87171')}
+                <polyline points="${incLine.trim()}" fill="none" stroke="#00E676" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+                <polyline points="${expLine.trim()}" fill="none" stroke="#f87171" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+                ${buildPoints(incPts,'#00E676','Ingresos')}
+                ${buildPoints(expPts,'#f87171','Egresos')}`;
+            const step=Math.ceil(daysInMonth/8);
+            let lbls='';
+            for(let d=1;d<=daysInMonth;d+=step) lbls+=`<span>${d}</span>`;
+            document.getElementById('cashflowLabels').innerHTML=lbls;
+        }
+
+        // ── DONUT ──────────────────────────────────────────────────────
+        function renderDonut(tx){
+            const exp = tx.filter(t=>(t.tipo||'').toLowerCase()==='egreso');
+            const cats={};
+            exp.forEach(t=>{ const c=t.categoria||'Otros'; cats[c]=(cats[c]||0)+(parseFloat(t.valor)||0); });
+            const total=Object.values(cats).reduce((a,b)=>a+b,0)||1;
+            const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,6);
+            const cx=55,cy=55,R=44,r=28;
+            let angle=-Math.PI/2, paths='', legend='';
+            entries.forEach(([cat,val])=>{
+                const pct=val/total, a=pct*2*Math.PI;
+                const x1=cx+R*Math.cos(angle), y1=cy+R*Math.sin(angle);
+                angle+=a;
+                const x2=cx+R*Math.cos(angle), y2=cy+R*Math.sin(angle);
+                const xi1=cx+r*Math.cos(angle-a), yi1=cy+r*Math.sin(angle-a);
+                const xi2=cx+r*Math.cos(angle), yi2=cy+r*Math.sin(angle);
+                const lg=a>Math.PI?1:0;
+                const col=getCatColor(cat);
+                paths+=`<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 ${lg},1 ${x2.toFixed(2)},${y2.toFixed(2)} L${xi2.toFixed(2)},${yi2.toFixed(2)} A${r},${r} 0 ${lg},0 ${xi1.toFixed(2)},${yi1.toFixed(2)} Z" fill="${col}" opacity="0.9"/>`;
+                legend+=`<div class="legend-item"><span class="dot" style="background:${col}"></span><span>${cat}</span><span class="value">${(pct*100).toFixed(0)}%</span></div>`;
+            });
+            const svg=document.getElementById('donutSvg');
+            if(entries.length===0){
+                svg.innerHTML=`<text x="55" y="60" text-anchor="middle" font-size="10" fill="currentColor" opacity=".4">Sin datos</text>`;
+                document.getElementById('donutLegend').innerHTML='';
+                return;
+            }
+            svg.innerHTML=paths;
+            document.getElementById('donutLegend').innerHTML=legend;
+        }
+
+        // ── META AHORRO ────────────────────────────────────────────────
+        function renderMeta(tx){
+            const meta=parseFloat(clientData.meta_ahorro)||0;
+            const nombre=clientData.meta_ahorro_nombre||'Mi meta de ahorro';
+            const actual=tx.filter(t=>(t.categoria||'').toLowerCase()==='ahorro').reduce((s,t)=>s+(parseFloat(t.valor)||0),0);
+            const pct=meta>0?Math.min(100,(actual/meta*100)):0;
+            document.getElementById('metaNombre').textContent=nombre;
+            document.getElementById('metaPct').textContent=pct.toFixed(0)+'%';
+            document.getElementById('metaFill').style.width=pct+'%';
+            document.getElementById('metaActual').textContent=fmtCOP(actual);
+            document.getElementById('metaTotal').textContent=meta>0?fmtCOP(meta):'Sin definir';
+        }
+
+        // ── TABLA ──────────────────────────────────────────────────────
+        function renderTable(tx){
+            const tbody=document.getElementById('transactions-body');
+            if(!tx.length){
+                tbody.innerHTML='<tr><td colspan="7" style="text-align:center; padding:20px; opacity:.5;">Sin movimientos en este período</td></tr>';
+                return;
+            }
+            tbody.innerHTML=tx.map((t,i)=>`
+                <tr>
+                    <td><span class="text-muted">#${String(tx.length-i).padStart(3,'0')}</span></td>
+                    <td>${t.fecha||'—'}</td>
+                    <td>${t.descripcion||'—'}</td>
+                    <td class="font-mono">${fmtCOP(t.valor)}</td>
+                    <td>${t.categoria||'—'}</td>
+                    <td>${t.mes||'—'}</td>
+                    <td><span class="badge-type ${(t.tipo||'').toLowerCase()==='ingreso'?'badge-income':'badge-expense'}">${(t.tipo||'').toUpperCase()||'—'}</span></td>
+                </tr>`).join('');
+        }
+
+        // ── TOOLTIP ────────────────────────────────────────────────────
+        window.showTT=function(e,text){
+            const tt=document.getElementById('tooltip');
+            tt.innerHTML=text.replace(/\n/g,'<br>');
+            tt.style.display='block';
+            tt.style.left=(e.clientX+12)+'px';
+            tt.style.top=(e.clientY-10)+'px';
+        };
+        window.hideTT=function(){ document.getElementById('tooltip').style.display='none'; };
+
+        // ── DESCARGAR CSV ──────────────────────────────────────────────
+        window.downloadCSV=function(){
+            const tx=getFiltered();
+            if(!tx.length){ alert('No hay datos para descargar.'); return; }
+            let csv='Fecha,Descripcion,Monto,Categoria,Mes,Tipo\n';
+            tx.forEach(t=>csv+=`${t.fecha||''},${(t.descripcion||'').replace(/,/g,' ')},${t.valor||0},${t.categoria||''},${t.mes||''},${t.tipo||''}\n`);
+            const a=document.createElement('a');
+            a.href='data:text/csv;charset=utf-8,%EF%BB%BF'+encodeURIComponent(csv);
+            a.download='historial_financiero.csv';
+            a.click();
+        };
+
+        // ── SET MES/AÑO ACTUAL ─────────────────────────────────────────
+        (function(){
+            const now=new Date();
+            document.getElementById('monthFilter').value=now.getMonth()+1;
+            document.getElementById('yearFilter').value=now.getFullYear();
+        })();
     </script>
 
     <script type="module">
         import { supabase } from './supabaseClient.js';
+        window.supabase = supabase;
         
         window.syncData = async function() {
             const btn = document.getElementById('btn-sync');
@@ -1084,39 +1339,60 @@
             if(btn) btn.disabled = false;
         };
 
+        window.doLogout = async function() {
+            await supabase.auth.signOut();
+            document.getElementById('main-dashboard').style.display = 'none';
+            document.getElementById('login-overlay').classList.remove('hidden');
+            document.getElementById('phone-input').value = '';
+        };
+
         window.handleLogin = async function() {
             const phone = document.getElementById('phone-input').value.trim();
-            if (!phone) return;
-            
+            const msgEl = document.getElementById('login-msg');
+            const errorEl = document.getElementById('login-error');
+            errorEl.style.display = 'none';
+            msgEl.className = '';
+            msgEl.style.display = 'none';
+
+            if (!phone) {
+                msgEl.textContent = '⚠️ Ingresa tu número de teléfono.';
+                msgEl.className = 'fail';
+                return;
+            }
+
             const btn = document.getElementById('login-btn');
-            btn.textContent = 'Iniciando...';
+            btn.textContent = 'Verificando...';
             btn.disabled = true;
-            document.getElementById('login-error').style.display = 'none';
-            
+
             try {
                 // 1. Obtener email usando el teléfono (via RPC function segura)
                 const { data: email, error: rpcError } = await supabase.rpc('get_email_by_phone', { p_telefono: phone });
-                
+
                 if (rpcError || !email) {
                     throw new Error('El número de teléfono no está registrado.');
                 }
-                
+
                 // 2. Iniciar sesión
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: phone + 'A1!'
                 });
-                
+
                 if (error) throw new Error('Credenciales incorrectas o hubo un problema de seguridad.');
-                
-                // Exito
-                document.getElementById('login-overlay').classList.add('hidden');
-                document.getElementById('main-dashboard').style.display = 'block';
-                loadDashboardData(data.user);
+
+                // ✅ ÉXITO
+                msgEl.textContent = '✅ Acceso exitoso. Cargando tu panel...';
+                msgEl.className = 'ok';
+                setTimeout(() => {
+                    document.getElementById('login-overlay').classList.add('hidden');
+                    document.getElementById('main-dashboard').style.display = 'block';
+                    loadDashboardData(data.user);
+                    msgEl.style.display = 'none';
+                }, 700);
             } catch (err) {
-                const errorEl = document.getElementById('login-error');
-                errorEl.textContent = err.message;
-                errorEl.style.display = 'block';
+                // ❌ FALLIDO
+                msgEl.textContent = '❌ Acceso fallido: ' + err.message;
+                msgEl.className = 'fail';
             } finally {
                 btn.textContent = 'Entrar al Dashboard';
                 btn.disabled = false;
@@ -1133,34 +1409,35 @@
             }
         });
         
-        let userTransactions = [];
-
         async function loadDashboardData(user) {
             // 1. Obtener datos del cliente
-            const { data: clientData } = await supabase
+            const { data: cd, error: cdErr } = await supabase
                 .from('clients')
                 .select('*')
                 .eq('id', user.id)
                 .single();
-                
-            if (clientData) {
+
+            if (cdErr) console.error('Error cargando cliente:', cdErr);
+
+            if (cd) {
+                clientData = cd;
                 const nameEl = document.getElementById('user-name');
-                if (nameEl) nameEl.textContent = clientData.nombre.split(' ')[0];
-                
+                if (nameEl) nameEl.textContent = (cd.nombre || '').split(' ')[0] || '—';
+
                 const phoneEl = document.getElementById('user-phone');
-                if (phoneEl) phoneEl.innerHTML = '<i class="fas fa-mobile-alt"></i> ' + (clientData.telefono || '');
-                
+                if (phoneEl) phoneEl.innerHTML = '<i class="fas fa-mobile-alt"></i> ' + (cd.telefono || '');
+
                 const planBadge = document.querySelector('.plan-badge');
-                if (planBadge && clientData.plan) planBadge.textContent = clientData.plan.toUpperCase();
-                
+                if (planBadge && cd.plan) planBadge.textContent = cd.plan.toUpperCase();
+
                 const planStartEl = document.getElementById('plan-start');
-                if (planStartEl && clientData.fecha_inicio) planStartEl.textContent = clientData.fecha_inicio;
-                
+                if (planStartEl && cd.fecha_inicio) planStartEl.textContent = cd.fecha_inicio;
+
                 const planEndEl = document.getElementById('plan-end');
-                if (planEndEl && clientData.fecha_fin) planEndEl.textContent = clientData.fecha_fin;
+                if (planEndEl && cd.fecha_fin) planEndEl.textContent = cd.fecha_fin;
             }
 
-            // 2. Cargar Transacciones Reales
+            // 2. Cargar transacciones reales
             const { data: txData, error: txError } = await supabase
                 .from('transactions')
                 .select('*')
@@ -1169,108 +1446,24 @@
 
             if (txError) {
                 console.error('Error cargando transacciones:', txError);
+                document.getElementById('transactions-body').innerHTML =
+                    '<tr><td colspan="7" style="text-align:center; padding:20px; color:#f87171;">Error al cargar movimientos. Intenta sincronizar.</td></tr>';
+                allTx = [];
                 return;
             }
-            
-            userTransactions = txData || [];
-            
-            // 3. Procesar Totales
-            let totalIngresos = 0;
-            let totalEgresos = 0;
-            
-            userTransactions.forEach(tx => {
-                const val = parseFloat(tx.valor) || 0;
-                if (tx.tipo && tx.tipo.toLowerCase() === 'ingreso') {
-                    totalIngresos += val;
-                } else if (tx.tipo && tx.tipo.toLowerCase() === 'egreso') {
-                    totalEgresos += val;
-                }
-            });
-            
-            let balance = totalIngresos - totalEgresos;
-            
-            const formatMoney = (num) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(num);
-            
-            document.getElementById('val-ingresos').textContent = formatMoney(totalIngresos);
-            document.getElementById('val-egresos').textContent = formatMoney(totalEgresos);
-            document.getElementById('val-balance').textContent = formatMoney(balance);
-            
-            // 4. Renderizar Tabla
-            const tbody = document.getElementById('transactions-body');
-            tbody.innerHTML = '';
-            
-            if (userTransactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">Aún no tienes movimientos registrados. ¡Envía un mensaje a tu Agente para empezar!</td></tr>';
-            } else {
-                userTransactions.forEach((tx, idx) => {
-                    const tr = document.createElement('tr');
-                    const badgeClass = (tx.tipo && tx.tipo.toLowerCase() === 'ingreso') ? 'badge-income' : 'badge-expense';
-                    const tipoText = tx.tipo ? tx.tipo.toUpperCase() : 'DESCONOCIDO';
-                    
-                    tr.innerHTML = `
-                        <td><span class="text-muted">#${String(userTransactions.length - idx).padStart(3, '0')}</span></td>
-                        <td>${tx.fecha || 'N/A'}</td>
-                        <td class="font-mono">${formatMoney(tx.valor)}</td>
-                        <td>${tx.categoria || 'N/A'}</td>
-                        <td>${tx.mes || 'N/A'}</td>
-                        <td><span class="badge-type ${badgeClass}">${tipoText}</span></td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
+
+            allTx = txData || [];
+            // 3. Renderizar todo aplicando el filtro mes/año actual
+            refreshAll();
         }
         
-        // 5. Descargar CSV
+        // 5. Descargar CSV (usa la función global downloadCSV, filtrada por mes/año)
         document.addEventListener('DOMContentLoaded', () => {
             const btnDownload = document.getElementById('btn-download-csv');
-            if (btnDownload) {
-                btnDownload.addEventListener('click', () => {
-                    if (!userTransactions || userTransactions.length === 0) {
-                        alert('No hay datos para descargar.');
-                        return;
-                    }
-                    
-                    let csv = 'Fecha,Descripcion,Monto,Categoria,Mes,Tipo\n';
-                    userTransactions.forEach(tx => {
-                        const row = [
-                            tx.fecha || '',
-                            (tx.descripcion || '').replace(/,/g, ' '),
-                            tx.valor || 0,
-                            tx.categoria || '',
-                            tx.mes || '',
-                            tx.tipo || ''
-                        ];
-                        csv += row.join(',') + '\n';
-                    });
-                    
-                    const blob = new Blob([csv], { type: 'text/csv' });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.setAttribute('hidden', '');
-                    a.setAttribute('href', url);
-                    a.setAttribute('download', 'historial_financiero.csv');
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                });
-            }
+            if (btnDownload) btnDownload.addEventListener('click', () => window.downloadCSV());
         });
     </script>
 
-    <script>
-        // Theme Logic
-        const themeSelector = document.getElementById('theme-selector');
-        const savedTheme = localStorage.getItem('dashboard-theme') || 'dark';
-        
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        if (themeSelector) {
-            themeSelector.value = savedTheme;
-            themeSelector.addEventListener('change', (e) => {
-                const newTheme = e.target.value;
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('dashboard-theme', newTheme);
-            });
-        }
-    </script>
+    <!-- La lógica de tema (3 temas persistentes) se maneja en el script principal via setTheme() -->
 </body>
 </html>
