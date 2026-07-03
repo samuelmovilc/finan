@@ -6,45 +6,29 @@
     <title>FinanSmart · Registro de Cliente</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         /* ===== MISMO BRANDING DARK LUXURY ===== */
         :root {
-            --bg-body: #0B0F19;
-            --bg-dashboard: rgba(30, 38, 64, 0.25);
-            --bg-card: rgba(30, 38, 64, 0.4);
-            --text-primary: #E2E8F0;
-            --text-secondary: #8892a8;
-            --text-muted: #5f6a80;
-            --border-color: rgba(255, 255, 255, 0.04);
+            --bg-body: #FFFFFF;
+            --bg-dashboard: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --text-primary: #0F1B36;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #E2E8F0;
             --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.3);
-            --input-bg: rgba(0, 0, 0, 0.2);
-            --btn-bg: rgba(30, 38, 64, 0.5);
-            --btn-hover: rgba(0, 230, 118, 0.08);
-            --badge-active: rgba(0, 230, 118, 0.12);
+            --input-bg: #FFFFFF;
+            --btn-bg: #FFFFFF;
+            --btn-hover: rgba(29, 78, 216, 0.08);
+            --badge-active: rgba(29, 78, 216, 0.12);
             --strike-color: rgba(248, 113, 113, 0.4);
             --badge-audio: rgba(96, 165, 250, 0.15);
             --cop-color: #fbbf24;
         }
 
-        [data-theme="light"] {
-            --bg-body: #f0f2f5;
-            --bg-dashboard: rgba(255, 255, 255, 0.6);
-            --bg-card: rgba(255, 255, 255, 0.7);
-            --text-primary: #1a1a2e;
-            --text-secondary: #4a4a6a;
-            --text-muted: #6a6a8a;
-            --border-color: rgba(0, 0, 0, 0.06);
-            --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.06);
-            --input-bg: rgba(255, 255, 255, 0.3);
-            --btn-bg: rgba(255, 255, 255, 0.5);
-            --btn-hover: rgba(0, 230, 118, 0.08);
-            --badge-active: rgba(0, 230, 118, 0.15);
-            --strike-color: rgba(248, 113, 113, 0.5);
-            --badge-audio: rgba(96, 165, 250, 0.2);
-            --cop-color: #d97706;
-        }
+        
 
         * {
             margin: 0;
@@ -54,7 +38,7 @@
 
         body {
             background-color: var(--bg-body);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -68,16 +52,14 @@
             max-width: 620px;
             width: 100%;
             background: var(--bg-dashboard);
-            backdrop-filter: blur(6px);
+            
             border-radius: 40px;
             padding: 32px 36px 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
-        [data-theme="light"] .form-container {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
-        }
+        
 
         .form-header {
             text-align: center;
@@ -90,7 +72,7 @@
             color: var(--text-primary);
         }
         .form-header .logo span {
-            color: #00E676;
+            color: #1D4ED8;
         }
         .form-header .subtitle {
             font-size: 14px;
@@ -100,13 +82,13 @@
         .form-header .badge-plan {
             display: inline-block;
             margin-top: 10px;
-            background: rgba(0, 230, 118, 0.08);
-            border: 1px solid rgba(0, 230, 118, 0.15);
+            background: rgba(29, 78, 216, 0.08);
+            border: 1px solid rgba(29, 78, 216, 0.15);
             border-radius: 40px;
             padding: 4px 18px;
             font-size: 12px;
             font-weight: 600;
-            color: #00E676;
+            color: #1D4ED8;
             letter-spacing: 0.3px;
         }
 
@@ -115,8 +97,8 @@
             text-align: center;
             padding: 20px 20px 16px;
             margin: 0 0 20px 0;
-            background: rgba(0, 230, 118, 0.02);
-            border: 1px solid rgba(0, 230, 118, 0.04);
+            background: rgba(29, 78, 216, 0.02);
+            border: 1px solid rgba(29, 78, 216, 0.04);
             border-radius: 20px;
             position: relative;
         }
@@ -128,7 +110,7 @@
             letter-spacing: 0.2px;
         }
         .hero-copy .copy-text strong {
-            color: #00E676;
+            color: #1D4ED8;
             font-weight: 600;
         }
         .hero-copy .copy-text .highlight {
@@ -138,7 +120,7 @@
         .hero-copy .copy-divider {
             width: 40px;
             height: 2px;
-            background: rgba(0, 230, 118, 0.15);
+            background: rgba(29, 78, 216, 0.15);
             margin: 10px auto 8px;
             border-radius: 4px;
         }
@@ -149,7 +131,7 @@
             letter-spacing: 0.5px;
         }
         .hero-copy .copy-cta i {
-            color: #00E676;
+            color: #1D4ED8;
             margin: 0 4px;
         }
 
@@ -177,15 +159,15 @@
             border-radius: 16px;
             padding: 12px 16px;
             color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-size: 14px;
             outline: none;
             transition: all 0.25s ease;
         }
         .form-group input:focus,
         .form-group select:focus {
-            border-color: #00E676;
-            box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.05);
+            border-color: #1D4ED8;
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.05);
         }
         .form-group input::placeholder {
             color: var(--text-muted);
@@ -233,14 +215,14 @@
             text-align: left;
         }
         .plan-btn:hover {
-            border-color: rgba(0, 230, 118, 0.25);
+            border-color: rgba(29, 78, 216, 0.25);
             transform: translateX(4px);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
         .plan-btn.selected {
-            border-color: #00E676;
-            background: rgba(0, 230, 118, 0.04);
-            box-shadow: 0 0 30px rgba(0, 230, 118, 0.02), inset 0 0 30px rgba(0, 230, 118, 0.02);
+            border-color: #1D4ED8;
+            background: rgba(29, 78, 216, 0.04);
+            box-shadow: 0 0 30px rgba(29, 78, 216, 0.02), inset 0 0 30px rgba(29, 78, 216, 0.02);
         }
 
         .plan-btn .radio-circle {
@@ -256,19 +238,17 @@
             flex-shrink: 0;
         }
         .plan-btn.selected .radio-circle {
-            border-color: #00E676;
-            background: #00E676;
+            border-color: #1D4ED8;
+            background: #1D4ED8;
         }
         .plan-btn.selected .radio-circle::after {
             content: '\f00c';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             font-size: 11px;
-            color: #0B0F19;
+            color: #FFFFFF;
         }
-        [data-theme="light"] .plan-btn.selected .radio-circle::after {
-            color: #ffffff;
-        }
+        
 
         .plan-btn .plan-content {
             display: flex;
@@ -285,7 +265,7 @@
         .plan-btn .plan-price {
             font-size: 18px;
             font-weight: 700;
-            color: #00E676;
+            color: #1D4ED8;
         }
         .plan-btn .plan-price small {
             font-size: 12px;
@@ -357,7 +337,7 @@
         }
 
         .plan-btn .badge-best {
-            background: #00E676;
+            background: #1D4ED8;
             color: #0B0F19;
             border-radius: 20px;
             padding: 1px 10px;
@@ -371,9 +351,7 @@
         .plan-btn .badge-best.show {
             display: inline-block;
         }
-        [data-theme="light"] .plan-btn .badge-best {
-            color: #ffffff;
-        }
+        
 
         /* Tasa de cambio */
         .exchange-rate {
@@ -387,12 +365,12 @@
 
         .btn-submit {
             width: 100%;
-            background: rgba(0, 230, 118, 0.12);
-            border: 1px solid rgba(0, 230, 118, 0.2);
+            background: rgba(29, 78, 216, 0.12);
+            border: 1px solid rgba(29, 78, 216, 0.2);
             border-radius: 16px;
             padding: 14px;
-            color: #00E676;
-            font-family: 'Inter', sans-serif;
+            color: #1D4ED8;
+            font-family: 'Montserrat', sans-serif;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -404,10 +382,10 @@
             margin-top: 8px;
         }
         .btn-submit:hover {
-            background: rgba(0, 230, 118, 0.2);
-            border-color: #00E676;
+            background: rgba(29, 78, 216, 0.2);
+            border-color: #1D4ED8;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 230, 118, 0.05);
+            box-shadow: 0 8px 24px rgba(29, 78, 216, 0.05);
         }
         .btn-submit:active {
             transform: translateY(0);
@@ -423,7 +401,7 @@
             color: var(--text-muted);
         }
         .form-footer a {
-            color: #00E676;
+            color: #1D4ED8;
             text-decoration: none;
         }
         .form-footer a:hover {
@@ -486,7 +464,7 @@
             z-index: 100;
         }
         .theme-toggle:hover {
-            border-color: #00E676;
+            border-color: #1D4ED8;
         }
 
         @media (max-width: 600px) {
@@ -576,99 +554,66 @@
             <hr class="form-divider" />
 
             <!-- ===== COPY MOTIVACIONAL (antes de seleccionar plan) ===== -->
-            <div class="hero-copy">
-                <div class="copy-text">
-                    <strong>¡Al fin podrás organizar y controlar tus finanzas</strong> antes de que sea demasiado tarde. <span class="highlight">Exitos</span> y escoge el <strong>mejor plan</strong> para ti.
-                </div>
-                <div class="copy-divider"></div>
-                <div class="copy-cta">
-                    <i class="fas fa-arrow-right"></i> Elige tu plan y comienza ahora <i class="fas fa-arrow-left"></i>
+            <div class="hero-copy" style="background: #EDF1FB; border-color: #1D4ED8; padding: 24px;">
+                <div class="copy-text" style="font-size: 18px; line-height: 1.5; color: #0F1B36; font-weight: 700; text-align: center;">
+                    No te preocupes, se te brindará una <span style="color: #1D4ED8;">prueba de 3 días</span>.<br><br>
+                    Si al final quieres organizar y controlar tus finanzas avanzas, o te inactivamos tu asistente.
                 </div>
             </div>
-
-            <!-- SELECCIÓN DE PLAN - BOTONES ALINEADOS A LA IZQUIERDA CON COP -->
-            <div class="form-group">
+            <!-- SELECCIÓN DE PLAN -->
+            <div class="form-group" style="margin-top: 24px;">
                 <label>Selecciona tu plan <span class="required">*</span></label>
                 <div class="plan-selector-grid" id="planSelector">
                     <!-- Plan Mensual -->
-                    <div class="plan-btn selected" data-plan="mensual" data-price="10.90" data-weekly-cop="9,800" data-audio="false" onclick="selectPlan(this)">
+                    <div class="plan-btn selected" data-plan="mensual" data-price="49000" data-audio="false" onclick="selectPlan(this)">
                         <div class="radio-circle"></div>
                         <div class="plan-content">
                             <span class="plan-name">Mensual</span>
-                            <span class="plan-price">$10.90 <small>/ mes</small></span>
-                            <span class="plan-price-cop">≈ $39,200 COP <small>/ mes</small></span>
-                            <span class="plan-weekly-cop">≈ <span>$9,800</span> <small>COP / semana</small></span>
-                            <span class="plan-desc">Flexible · Sin compromiso</span>
+                            <span class="plan-price" style="font-size: 18px; font-weight: 700; color: #1D4ED8;">$49.000 <small style="font-size: 12px; font-weight: 400; color: var(--text-muted);">COP / mes</small></span>
+                            <span class="plan-desc" style="width: 100%; display:block; margin-top:4px;">Flexible · Sin compromiso</span>
+                            <span class="plan-desc" style="width: 100%; color: var(--text-muted); font-size:11px;">≈ $12.250 COP / semana</span>
                         </div>
                     </div>
 
-                    <!-- Plan Anual (con año tachado) -->
-                    <div class="plan-btn" data-plan="anual" data-price="99.00" data-weekly-cop="6,850" data-audio="true" onclick="selectPlan(this)">
+                    <!-- Plan Anual -->
+                    <div class="plan-btn" data-plan="anual" data-price="329000" data-audio="true" onclick="selectPlan(this)">
                         <div class="radio-circle"></div>
                         <div class="plan-content">
-                            <span class="plan-name">Anual</span>
-                            <span class="plan-price">$99 <small>/ año</small></span>
-                            <span class="plan-strike">$130.80 / año</span>
-                            <span class="plan-price-cop">≈ $356,300 COP <small>/ año</small></span>
-                            <span class="plan-weekly-cop">≈ <span>$6,850</span> <small>COP / semana</small></span>
-                            <span class="plan-desc">Ahorra 24%</span>
-                            <div class="badges-inline">
-                                <span class="badge-feature show"><i class="fas fa-headphones"></i> Interpreta audio</span>
-                                <span class="badge-best show">⭐ mejor valor</span>
+                            <span class="plan-name">Anual <span style="font-size:10px; color:#1D4ED8; font-weight:bold; margin-left:4px;">(EL MÁS COMPRADO)</span></span>
+                            <span class="plan-price" style="font-size: 18px; font-weight: 700; color: #1D4ED8;">$329.000 <small style="font-size: 12px; font-weight: 400; color: var(--text-muted);">COP / año</small></span>
+                            <span class="plan-desc" style="width: 100%; display:block; margin-top:4px; font-weight: 600; color: #0F1B36;">TUS FINANZAS TODO EL AÑO EN ORDEN</span>
+                            <span class="plan-desc" style="width: 100%; color: var(--text-muted); font-size:11px;">≈ $27.416 COP / mes (Apenas ≈ $6.326 COP / semana)</span>
+                            
+                            <div style="width: 100%; background: #FFF3CD; color: #856404; border: 1px solid #FFEEBA; border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: bold; margin-top: 6px; text-align: center; text-transform: uppercase;">
+                                🔥 Super Oferta Disponible Solo Esta Semana
+                            </div>
+                            
+                            <div class="badges-inline" style="width: 100%; margin-top:6px;">
+                                <span class="badge-feature show" style="background: rgba(96, 165, 250, 0.15); color: #60a5fa; border-radius: 20px; padding: 1px 10px; font-size: 10px; font-weight: 600;"><i class="fas fa-headphones"></i> Interpreta audio</span>
+                                <span class="badge-best show" style="background: #1D4ED8; color: #FFFFFF; border-radius: 20px; padding: 1px 10px; font-size: 10px; font-weight: 700;">⭐ mejor valor</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Plan 5 Años (sin año tachado) -->
-                    <div class="plan-btn" data-plan="5años" data-price="199.00" data-weekly-cop="2,750" data-audio="false" onclick="selectPlan(this)">
-                        <div class="radio-circle"></div>
-                        <div class="plan-content">
-                            <span class="plan-name">5 Años</span>
-                            <span class="plan-price">$199 <small>/ 5 años</small></span>
-                            <span class="plan-price-cop">≈ $716,200 COP <small>/ 5 años</small></span>
-                            <span class="plan-weekly-cop">≈ <span>$2,750</span> <small>COP / semana</small></span>
-                            <span class="plan-desc">Máximo ahorro</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tasa de cambio -->
-                <div class="exchange-rate">
-                    <i class="fas fa-exchange-alt" style="margin-right:4px;"></i> Tasa de cambio: 1 USD = $3,599 COP
                 </div>
 
                 <input type="hidden" id="planSeleccionado" value="mensual" />
-                <input type="hidden" id="precioSeleccionado" value="10.90" />
+                <input type="hidden" id="precioSeleccionado" value="49000" />
             </div>
 
             <hr class="form-divider" />
 
             <!-- CONFIGURACIÓN INICIAL -->
-            <div class="form-group">
-                <label>Moneda preferida</label>
-                <select id="moneda">
-                    <option value="USD">USD ($)</option>
-                    <option value="COP">COP ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="MXN">MXN ($)</option>
-                </select>
-            </div>
+            <input type="hidden" id="moneda" value="COP" />
 
-            <div class="form-group">
-                <label>Idioma del dashboard</label>
-                <select id="idioma">
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
+            <input type="hidden" id="idioma" value="es" />
 
             <hr class="form-divider" />
 
             <!-- TÉRMINOS -->
             <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <input type="checkbox" id="terminos" style="width:18px;height:18px;accent-color:#00E676;cursor:pointer;" required />
+                <input type="checkbox" id="terminos" style="width:18px;height:18px;accent-color:#1D4ED8;cursor:pointer;" required />
                 <label for="terminos" style="font-size:13px;color:var(--text-secondary);cursor:pointer;text-transform:none;letter-spacing:0;">
-                    Acepto los <a href="#" style="color:#00E676;text-decoration:none;">términos y condiciones</a>
+                    Acepto los <a href="#" style="color:#1D4ED8;text-decoration:none;">términos y condiciones</a>
                 </label>
             </div>
 
@@ -684,7 +629,7 @@
 
         <!-- PANTALLA DE ÉXITO (Oculta por defecto) -->
         <div id="success-screen" style="display: none; text-align: center; padding: 40px 20px;">
-            <i class="fas fa-check-circle" style="font-size: 64px; color: #00E676; margin-bottom: 20px;"></i>
+            <i class="fas fa-check-circle" style="font-size: 64px; color: #1D4ED8; margin-bottom: 20px;"></i>
             <h2 style="color: var(--text-primary); margin-bottom: 16px; font-size: 24px;">¡Registro Exitoso!</h2>
             <p style="color: var(--text-secondary); margin-bottom: 30px; font-size: 15px; line-height: 1.6;">
                 Tu cuenta ha sido creada. Ahora el agente de IA está listo para atenderte.
@@ -692,7 +637,7 @@
             </p>
             <a href="https://wa.me/573002397590?text=Hola,%20acabo%20de%20registrarme%20y%20quiero%20iniciar" 
                target="_blank" 
-               style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #00E676; color: #000; text-decoration: none; padding: 18px 30px; border-radius: 16px; font-weight: 600; font-size: 18px; width: 100%; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);">
+               style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #1D4ED8; color: #000; text-decoration: none; padding: 18px 30px; border-radius: 16px; font-weight: 600; font-size: 18px; width: 100%; transition: 0.3s; box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);">
                 <i class="fab fa-whatsapp" style="font-size: 24px;"></i> Chatear con el Agente
             </a>
         </div>
@@ -706,9 +651,7 @@
     </div>
 
     <!-- BOTÓN TEMA -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon" id="themeIcon"></i>
-    </button>
+    
 
     <script type="module">
         import { supabase } from './supabaseClient.js';
