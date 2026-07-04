@@ -839,11 +839,11 @@
         <div class="filters-bar">
             <div class="filter-group">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar por teléfono..." id="searchPhone" />
+                <input type="text" placeholder="Buscar por teléfono..." id="searchPhone" oninput="applyFilters()" />
             </div>
             <div class="filter-group">
                 <i class="fas fa-filter"></i>
-                <select id="filterStatus">
+                <select id="filterStatus" onchange="applyFilters()">
                     <option value="">Todos los estados</option>
                     <option value="activo">Activo</option>
                     <option value="inactivo">Inactivo</option>
@@ -912,6 +912,7 @@
                             <th>Nombre</th>
                             <th>Plan</th>
                             <th>Estado</th>
+                            <th>Día Seg.</th>
                             <th>Fecha inicio</th>
                             <th>Fecha fin</th>
                             <th>Acciones</th>
@@ -1195,18 +1196,33 @@
             }
         }
 
-        async function loadClients() {
-            const tbody = document.getElementById('clientsBody');
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando...</td></tr>';
+        let allClients = [];
 
-            const { data, error } = await supabase.from('clients').select('*').order('fecha_registro', { ascending: false });
-
-            if (error) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
-                return;
+        window.applyFilters = function() {
+            const search = document.getElementById('searchPhone').value.toLowerCase();
+            const status = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value.toLowerCase() : '';
+            
+            let filtered = allClients;
+            
+            if (search) {
+                filtered = filtered.filter(c => 
+                    (c.telefono && c.telefono.toLowerCase().includes(search)) || 
+                    (c.nombre && c.nombre.toLowerCase().includes(search))
+                );
             }
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay clientes</td></tr>';
+            
+            if (status) {
+                filtered = filtered.filter(c => c.estado && c.estado.toLowerCase() === status);
+            }
+
+            renderClientsTable(filtered);
+        }
+
+        function renderClientsTable(data) {
+            const tbody = document.getElementById('clientsBody');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay resultados</td></tr>';
+                document.getElementById('clientPageInfo').textContent = `0 / 0 (0)`;
                 return;
             }
 
@@ -1217,18 +1233,67 @@
                     <td>${c.nombre || '-'}</td>
                     <td><span class="badge-type" style="background:rgba(167,139,250,0.12);color:#a78bfa;">${(c.plan || '-').toUpperCase()}</span></td>
                     <td><span class="badge-type ${c.estado === 'activo' ? 'badge-income' : 'badge-expense'}">${(c.estado || '').toUpperCase()}</span></td>
+                    <td style="font-weight: bold; color: ${c.dia_seguimiento >= 7 ? '#00E676' : '#fbbf24'};">${c.dia_seguimiento != null ? c.dia_seguimiento + '/7' : '0/7'}</td>
                     <td>${c.fecha_inicio || '-'}</td>
                     <td>${c.fecha_registro || '-'}</td>
-                    <td><button class="btn-delete"><i class="fas fa-trash"></i></button></td>
+                    <td>
+                        <button class="btn-action" style="margin-right: 4px;" onclick="toggleClientStatus('${c.id}', '${c.estado}')" title="Cambiar Estado">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <button class="btn-delete" onclick="deleteClientRecord('${c.id}')" title="Eliminar Cliente">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             `).join('');
 
-            document.getElementById('kpiIngresos').textContent = data.length;
+            document.getElementById('clientPageInfo').textContent = `1 / 1 (${data.length})`;
+        }
+
+        window.toggleClientStatus = async function(id, currentStatus) {
+            const newStatus = currentStatus === 'activo' ? 'inactivo' : 'activo';
+            if (!confirm(`¿Seguro que deseas marcar este cliente como ${newStatus.toUpperCase()}?`)) return;
+            
+            const { error } = await supabase.from('clients').update({ estado: newStatus }).eq('id', id);
+            if (error) {
+                alert('Error al actualizar estado: ' + error.message);
+                return;
+            }
+            loadClients();
+        }
+
+        window.deleteClientRecord = async function(id) {
+            if (!confirm('¿Seguro que deseas eliminar este cliente por completo?')) return;
+            
+            const { error } = await supabase.from('clients').delete().eq('id', id);
+            if (error) {
+                alert('Error al eliminar: ' + error.message);
+                return;
+            }
+            loadClients();
+        }
+
+        async function loadClients() {
+            const tbody = document.getElementById('clientsBody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando...</td></tr>';
+
+            const { data, error } = await supabase.from('clients').select('*').order('fecha_registro', { ascending: false });
+
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
+                return;
+            }
+            
+            allClients = data || [];
+
+            document.getElementById('kpiIngresos').textContent = allClients.length;
             document.getElementById('kpiIngresos').previousElementSibling.textContent = 'Total Clientes';
-            const activos = data.filter(c => c.estado === 'activo').length;
+            const activos = allClients.filter(c => c.estado === 'activo').length;
             document.getElementById('kpiGanancias').textContent = activos;
             document.getElementById('kpiGanancias').previousElementSibling.textContent = 'Activos';
-            document.getElementById('clientPageInfo').textContent = `1 / 1 (${data.length})`;
+
+            // Ejecutar filtros inicialmente para mostrar la tabla
+            applyFilters();
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
