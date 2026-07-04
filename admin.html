@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SaaS Panel · Licencias</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         :root {
@@ -77,6 +80,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
         }
+
         [data-theme="light"] .dashboard {
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
         }
@@ -105,6 +109,7 @@
             font-weight: 600;
             letter-spacing: -0.3px;
         }
+
         .header-left h1 span {
             color: #00E676;
         }
@@ -133,24 +138,30 @@
             backdrop-filter: blur(4px);
             text-decoration: none;
         }
+
         .btn-minimal i {
             font-size: 13px;
             color: #00E676;
         }
+
         .btn-minimal:hover {
             border-color: #00E676;
             background: var(--btn-hover);
             transform: translateY(-1px);
         }
+
         .btn-minimal.danger i {
             color: #f87171;
         }
+
         .btn-minimal.danger:hover {
             border-color: #f87171;
         }
+
         .btn-minimal.support i {
             color: #60a5fa;
         }
+
         .btn-minimal.support:hover {
             border-color: #60a5fa;
         }
@@ -165,6 +176,7 @@
             cursor: pointer;
             transition: all 0.25s ease;
         }
+
         .theme-toggle:hover {
             border-color: #00E676;
         }
@@ -182,6 +194,7 @@
             backdrop-filter: blur(4px);
             align-items: center;
         }
+
         .filters-bar .filter-group {
             display: flex;
             align-items: center;
@@ -191,10 +204,12 @@
             padding: 4px 12px 4px 14px;
             border: 1px solid var(--border-color);
         }
+
         .filters-bar .filter-group i {
             color: var(--text-secondary);
             font-size: 12px;
         }
+
         .filters-bar .filter-group input,
         .filters-bar .filter-group select {
             background: transparent;
@@ -206,10 +221,12 @@
             outline: none;
             min-width: 100px;
         }
+
         .filters-bar .filter-group select option {
             background: var(--bg-card);
             color: var(--text-primary);
         }
+
         .filters-bar .filter-group input::placeholder {
             color: var(--text-muted);
         }
@@ -221,6 +238,7 @@
             gap: 16px;
             margin-bottom: 20px;
         }
+
         .kpi-card {
             background: var(--bg-card);
             backdrop-filter: blur(8px);
@@ -230,10 +248,12 @@
             box-shadow: var(--shadow-card);
             transition: all 0.3s ease;
         }
+
         .kpi-card:hover {
             border-color: rgba(0, 230, 118, 0.1);
             transform: translateY(-2px);
         }
+
         .kpi-card .kpi-label {
             font-size: 12px;
             text-transform: uppercase;
@@ -241,21 +261,26 @@
             color: var(--text-secondary);
             font-weight: 500;
         }
+
         .kpi-card .kpi-value {
             font-size: 28px;
             font-weight: 700;
             margin-top: 4px;
             color: var(--text-primary);
         }
+
         .kpi-card .kpi-value.positive {
             color: #00E676;
         }
+
         .kpi-card .kpi-value.negative {
             color: #f87171;
         }
+
         .kpi-card .kpi-value.neutral {
             color: #60a5fa;
         }
+
         .kpi-card .kpi-sub {
             font-size: 12px;
             color: var(--text-muted);
@@ -272,6 +297,7 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
+
         .table-header {
             display: flex;
             justify-content: space-between;
@@ -285,11 +311,13 @@
             top: 0;
             z-index: 5;
         }
+
         .table-header h3 {
             font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
         }
+
         .table-header h3 i {
             color: #00E676;
             margin-right: 8px;
@@ -303,6 +331,7 @@
             color: var(--text-secondary);
             flex-wrap: wrap;
         }
+
         .table-pagination select {
             background: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -314,10 +343,12 @@
             outline: none;
             cursor: pointer;
         }
+
         .table-pagination select option {
             background: var(--bg-card);
             color: var(--text-primary);
         }
+
         .table-pagination .page-btn {
             background: var(--btn-bg);
             border: 1px solid var(--border-color);
@@ -329,15 +360,18 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+
         .table-pagination .page-btn:hover {
             border-color: #00E676;
             color: #00E676;
         }
+
         .table-pagination .page-btn.active {
             background: rgba(0, 230, 118, 0.12);
             border-color: #00E676;
             color: #00E676;
         }
+
         .table-pagination .page-info {
             padding: 0 4px;
             min-width: 60px;
@@ -352,18 +386,22 @@
             position: relative;
             scroll-behavior: smooth;
         }
+
         .table-scroll::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
+
         .table-scroll::-webkit-scrollbar-track {
             background: var(--scrollbar-track);
             border-radius: 10px;
         }
+
         .table-scroll::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb);
             border-radius: 10px;
         }
+
         .table-scroll::-webkit-scrollbar-thumb:hover {
             background: rgba(0, 230, 118, 0.15);
         }
@@ -376,6 +414,7 @@
             font-size: 13px;
             min-width: 900px;
         }
+
         .clients-table thead th {
             position: sticky;
             top: 0;
@@ -390,14 +429,17 @@
             letter-spacing: 0.5px;
             border-bottom: 2px solid var(--border-color);
         }
+
         .clients-table tbody tr td {
             padding: 10px 14px;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-primary);
         }
+
         .clients-table tbody tr:hover td {
             background: rgba(0, 230, 118, 0.02);
         }
+
         .clients-table tbody tr:last-child td {
             border-bottom: none;
         }
@@ -411,18 +453,22 @@
             font-weight: 600;
             text-transform: uppercase;
         }
+
         .badge-active {
             background: var(--badge-active);
             color: #00E676;
         }
+
         .badge-inactive {
             background: var(--badge-inactive);
             color: #f87171;
         }
+
         .badge-expired {
             background: var(--badge-expired);
             color: #f87171;
         }
+
         .badge-soon {
             background: rgba(251, 191, 36, 0.15);
             color: #fbbf24;
@@ -443,15 +489,18 @@
             align-items: center;
             gap: 4px;
         }
+
         .btn-action:hover {
             border-color: #00E676;
             color: #00E676;
             background: var(--btn-hover);
         }
+
         .btn-action.danger:hover {
             border-color: #f87171;
             color: #f87171;
         }
+
         .btn-action i {
             font-size: 11px;
         }
@@ -476,11 +525,13 @@
             align-items: flex-end;
             background: var(--table-bg);
         }
+
         .expense-form .form-group {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
+
         .expense-form .form-group label {
             font-size: 10px;
             text-transform: uppercase;
@@ -488,6 +539,7 @@
             color: var(--text-muted);
             font-weight: 500;
         }
+
         .expense-form .form-group input,
         .expense-form .form-group select {
             background: var(--input-bg);
@@ -501,13 +553,16 @@
             min-width: 120px;
             transition: border 0.2s;
         }
+
         .expense-form .form-group input:focus,
         .expense-form .form-group select:focus {
             border-color: #00E676;
         }
+
         .expense-form .form-group input::placeholder {
             color: var(--text-muted);
         }
+
         .expense-form .form-group select option {
             background: var(--bg-card);
             color: var(--text-primary);
@@ -529,6 +584,7 @@
             gap: 6px;
             height: 34px;
         }
+
         .btn-add:hover {
             background: rgba(0, 230, 118, 0.2);
             border-color: #00E676;
@@ -541,6 +597,7 @@
             font-size: 13px;
             min-width: 500px;
         }
+
         .expenses-table thead th {
             position: sticky;
             top: 0;
@@ -555,14 +612,17 @@
             letter-spacing: 0.5px;
             border-bottom: 2px solid var(--border-color);
         }
+
         .expenses-table tbody tr td {
             padding: 8px 14px;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-primary);
         }
+
         .expenses-table tbody tr:hover td {
             background: rgba(0, 230, 118, 0.02);
         }
+
         .expenses-table tbody tr:last-child td {
             border-bottom: none;
         }
@@ -577,6 +637,7 @@
             padding: 4px 8px;
             border-radius: 8px;
         }
+
         .btn-delete:hover {
             color: #f87171;
             background: rgba(248, 113, 113, 0.1);
@@ -591,70 +652,156 @@
             .dashboard {
                 padding: 12px 14px;
             }
+
             .kpi-grid {
                 grid-template-columns: 1fr 1fr;
             }
+
             .filters-bar {
                 flex-direction: column;
                 align-items: stretch;
             }
+
             .filters-bar .filter-group {
                 width: 100%;
             }
+
             .filters-bar .filter-group input,
             .filters-bar .filter-group select {
                 min-width: auto;
                 width: 100%;
             }
+
             .expense-form {
                 flex-direction: column;
             }
+
             .expense-form .form-group {
                 width: 100%;
             }
+
             .expense-form .form-group input,
             .expense-form .form-group select {
                 min-width: auto;
                 width: 100%;
             }
+
             .header-left h1 {
                 font-size: 18px;
             }
+
             .table-pagination {
                 font-size: 11px;
             }
+
             .table-pagination .page-btn {
                 padding: 2px 8px;
                 font-size: 11px;
             }
         }
+
         @media (max-width: 500px) {
             .kpi-grid {
                 grid-template-columns: 1fr;
             }
+
             .table-scroll {
                 max-height: 300px;
             }
         }
-        .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .login-overlay.hidden { display: none; }
-        .login-box { background: var(--bg-card); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); text-align: center; max-width: 400px; width: 90%; backdrop-filter: blur(8px); }
-        .login-box h2 { margin-bottom: 24px; color: var(--text-primary); font-size: 24px; }
-        .login-box p { color: var(--text-secondary); margin-bottom: 24px; font-size: 14px; }
-        .login-box input { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: var(--text-primary); margin-bottom: 16px; font-size: 16px; text-align: center; }
-        [data-theme="light"] .login-box input { background: rgba(255,255,255,0.6); }
-        .login-box button { width: 100%; padding: 16px; border-radius: 12px; background: #00E676; color: #000; font-weight: 600; border: none; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .login-box button:hover { background: #00c853; }
-        #login-error { color: #f87171; margin-top: 14px; font-size: 14px; display: none; }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-overlay.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(8px);
+        }
+
+        .login-box h2 {
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            font-size: 24px;
+        }
+
+        .login-box p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        [data-theme="light"] .login-box input {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            background: #00E676;
+            color: #000;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .login-box button:hover {
+            background: #00c853;
+        }
+
+        #login-error {
+            color: #f87171;
+            margin-top: 14px;
+            font-size: 14px;
+            display: none;
+        }
     </style>
 </head>
+
 <body>
     <div id="login-overlay" class="login-overlay">
         <div class="login-box">
             <h2>Panel SaaS</h2>
             <p>Acceso administrativo</p>
             <input type="email" id="admin-email" placeholder="Email" value="bettercomput@gmail.com">
-            <input type="password" id="admin-password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') handleAdminLogin()">
+            <input type="password" id="admin-password" placeholder="Contraseña"
+                onkeydown="if(event.key==='Enter') handleAdminLogin()">
             <button id="login-btn" onclick="handleAdminLogin()">Entrar al Panel</button>
             <div id="login-error"></div>
         </div>
@@ -664,7 +811,7 @@
         <header class="header">
             <div class="header-left">
                 <h1><span>SaaS</span> Panel</h1>
-                
+
             </div>
             <div class="header-right"></div>
         </header>
@@ -748,9 +895,11 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <button class="page-btn" onclick="changeClientPage(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <button class="page-btn" onclick="changeClientPage(-1)"><i
+                                class="fas fa-chevron-left"></i></button>
                         <span class="page-info" id="clientPageInfo">1 / 1</span>
-                        <button class="page-btn" onclick="changeClientPage(1)"><i class="fas fa-chevron-right"></i></button>
+                        <button class="page-btn" onclick="changeClientPage(1)"><i
+                                class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -780,7 +929,8 @@
             <div class="table-header">
                 <h3><i class="fas fa-receipt"></i> Gastos y recordatorios</h3>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                    <span style="font-size:12px;color:var(--text-muted);">Agrega gastos con categoría y fecha de vencimiento</span>
+                    <span style="font-size:12px;color:var(--text-muted);">Agrega gastos con categoría y fecha de
+                        vencimiento</span>
                     <div class="table-pagination">
                         <span>Mostrar</span>
                         <select id="expensesPerPage" onchange="renderExpenses()">
@@ -789,9 +939,11 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <button class="page-btn" onclick="changeExpensePage(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <button class="page-btn" onclick="changeExpensePage(-1)"><i
+                                class="fas fa-chevron-left"></i></button>
                         <span class="page-info" id="expensePageInfo">1 / 1</span>
-                        <button class="page-btn" onclick="changeExpensePage(1)"><i class="fas fa-chevron-right"></i></button>
+                        <button class="page-btn" onclick="changeExpensePage(1)"><i
+                                class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -891,15 +1043,23 @@
 
         let clients = generateClients(500);
         let expenses = [
-            { id: 1, concepto: 'VPS DigitalOcean', categoria: 'VPS', monto: 45.00, fechaVencimiento: '2026-07-15',
-            hasDue: true },
+            {
+                id: 1, concepto: 'VPS DigitalOcean', categoria: 'VPS', monto: 45.00, fechaVencimiento: '2026-07-15',
+                hasDue: true
+            },
             { id: 2, concepto: 'Google Ads', categoria: 'Publicidad', monto: 120.00, fechaVencimiento: '', hasDue: false },
-            { id: 3, concepto: 'Suscripción Notion', categoria: 'Suscripción', monto: 12.00, fechaVencimiento: '2026-06-30',
-                hasDue: true },
-            { id: 4, concepto: 'Dominio .com', categoria: 'VPS', monto: 15.00, fechaVencimiento: '2026-08-10',
-            hasDue: true },
-            { id: 5, concepto: 'Meta Ads', categoria: 'Publicidad', monto: 200.00, fechaVencimiento: '2026-07-20',
-                hasDue: true },
+            {
+                id: 3, concepto: 'Suscripción Notion', categoria: 'Suscripción', monto: 12.00, fechaVencimiento: '2026-06-30',
+                hasDue: true
+            },
+            {
+                id: 4, concepto: 'Dominio .com', categoria: 'VPS', monto: 15.00, fechaVencimiento: '2026-08-10',
+                hasDue: true
+            },
+            {
+                id: 5, concepto: 'Meta Ads', categoria: 'Publicidad', monto: 200.00, fechaVencimiento: '2026-07-20',
+                hasDue: true
+            },
             { id: 6, concepto: 'AWS EC2', categoria: 'VPS', monto: 89.00, fechaVencimiento: '2026-08-01', hasDue: true },
         ];
 
@@ -917,20 +1077,20 @@
             const search = document.getElementById('searchPhone').value.toLowerCase();
             const statusFilter = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : '';
         }
-        
+
         // Las funciones mock se reemplazan por Supabase.
-        window.changeClientPage = function(dir) { console.log('Paginacion mock'); }
-        window.renderClients = function() { console.log('Manejado por Supabase'); }
-        window.renderExpenses = function() { console.log('Render expenses'); }
-        window.changeExpensePage = function() { console.log('change exp page'); }
-        window.addClient = function() { alert('Agregar cliente desde el formulario web'); }
-        
+        window.changeClientPage = function (dir) { console.log('Paginacion mock'); }
+        window.renderClients = function () { console.log('Manejado por Supabase'); }
+        window.renderExpenses = function () { console.log('Render expenses'); }
+        window.changeExpensePage = function () { console.log('change exp page'); }
+        window.addClient = function () { alert('Agregar cliente desde el formulario web'); }
+
         async function loadExpenses() {
             const tbody = document.getElementById('expensesBody');
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando gastos...</td></tr>';
-            
+
             const { data, error } = await supabase.from('admin_expenses').select('*').order('created_at', { ascending: false });
-            
+
             if (error) {
                 tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
                 return;
@@ -939,60 +1099,60 @@
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay gastos registrados</td></tr>';
                 return;
             }
-            
+
             let totalExpenses = 0;
-            
+
             tbody.innerHTML = data.map(e => {
                 totalExpenses += parseFloat(e.monto) || 0;
                 return `
                 <tr>
                     <td>${e.concepto}</td>
                     <td>${e.categoria}</td>
-                    <td>${parseFloat(e.monto).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td>${parseFloat(e.monto).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                     <td><span class="badge-type ${e.vence ? 'badge-expense' : 'badge-income'}">${e.fecha_vencimiento}</span></td>
                     <td><button class="btn-delete" onclick="deleteExpense('${e.id}')"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `}).join('');
-            
+
             // Update Top Card (Egresos del mes)
             const kpiEgresos = document.getElementById('kpiEgresos');
-            if(kpiEgresos) {
-                kpiEgresos.textContent = `${totalExpenses.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            if (kpiEgresos) {
+                kpiEgresos.textContent = `${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
             }
         }
-        
-        window.deleteExpense = async function(id) {
-            if(!confirm('¿Seguro que deseas eliminar este gasto?')) return;
+
+        window.deleteExpense = async function (id) {
+            if (!confirm('¿Seguro que deseas eliminar este gasto?')) return;
             await supabase.from('admin_expenses').delete().eq('id', id);
             loadExpenses();
         }
 
-        window.addExpense = async function() { 
+        window.addExpense = async function () {
             const btn = document.querySelector('.btn-add');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';
             btn.disabled = true;
-            
+
             const concepto = document.getElementById('expConcept').value.trim();
             const categoria = document.getElementById('expCategory').value;
             const monto = document.getElementById('expAmount').value;
             const fecha_vencimiento = document.getElementById('expDate').value;
             const vence = document.getElementById('expHasDue').value === '1';
-            
-            if(!concepto || !monto || !fecha_vencimiento) {
+
+            if (!concepto || !monto || !fecha_vencimiento) {
                 alert('Por favor completa Concepto, Monto y Fecha.');
                 btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
                 btn.disabled = false;
                 return;
             }
-            
+
             const { error } = await supabase.from('admin_expenses').insert([{
                 concepto, categoria, monto, fecha_vencimiento, vence
             }]);
-            
+
             btn.innerHTML = '<i class="fas fa-plus"></i> Agregar';
             btn.disabled = false;
-            
-            if(error) {
+
+            if (error) {
                 alert('Error al guardar: ' + error.message);
             } else {
                 document.getElementById('expConcept').value = '';
@@ -1004,22 +1164,23 @@
     </script>
     <script type="module">
         import { supabase } from './supabaseClient.js';
-        
-        window.handleAdminLogin = async function() {
+        window.supabase = supabase;
+
+        window.handleAdminLogin = async function () {
             const email = document.getElementById('admin-email').value.trim();
             const password = document.getElementById('admin-password').value.trim();
             if (!email || !password) return;
-            
+
             const btn = document.getElementById('login-btn');
             btn.textContent = 'Iniciando...';
             btn.disabled = true;
             document.getElementById('login-error').style.display = 'none';
-            
+
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw new Error('Credenciales incorrectas.');
                 if (email !== 'bettercomput@gmail.com') throw new Error('No tienes permisos de administrador.');
-                
+
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('main-dashboard').style.display = 'block';
                 loadClients();
@@ -1033,13 +1194,13 @@
                 btn.disabled = false;
             }
         }
-        
+
         async function loadClients() {
             const tbody = document.getElementById('clientsBody');
             tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Cargando...</td></tr>';
-            
+
             const { data, error } = await supabase.from('clients').select('*').order('fecha_registro', { ascending: false });
-            
+
             if (error) {
                 tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
                 return;
@@ -1048,20 +1209,20 @@
                 tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No hay clientes</td></tr>';
                 return;
             }
-            
+
             tbody.innerHTML = data.map(c => `
                 <tr>
-                    <td>...${(c.id||'').substring(0,6)}</td>
-                    <td>${c.telefono||'-'}</td>
-                    <td>${c.nombre||'-'}</td>
-                    <td><span class="badge-type" style="background:rgba(167,139,250,0.12);color:#a78bfa;">${(c.plan||'-').toUpperCase()}</span></td>
-                    <td><span class="badge-type ${c.estado === 'activo' ? 'badge-income' : 'badge-expense'}">${(c.estado||'').toUpperCase()}</span></td>
-                    <td>${c.fecha_inicio||'-'}</td>
-                    <td>${c.fecha_registro||'-'}</td>
+                    <td>...${(c.id || '').substring(0, 6)}</td>
+                    <td>${c.telefono || '-'}</td>
+                    <td>${c.nombre || '-'}</td>
+                    <td><span class="badge-type" style="background:rgba(167,139,250,0.12);color:#a78bfa;">${(c.plan || '-').toUpperCase()}</span></td>
+                    <td><span class="badge-type ${c.estado === 'activo' ? 'badge-income' : 'badge-expense'}">${(c.estado || '').toUpperCase()}</span></td>
+                    <td>${c.fecha_inicio || '-'}</td>
+                    <td>${c.fecha_registro || '-'}</td>
                     <td><button class="btn-delete"><i class="fas fa-trash"></i></button></td>
                 </tr>
             `).join('');
-            
+
             document.getElementById('kpiIngresos').textContent = data.length;
             document.getElementById('kpiIngresos').previousElementSibling.textContent = 'Total Clientes';
             const activos = data.filter(c => c.estado === 'activo').length;
@@ -1069,7 +1230,7 @@
             document.getElementById('kpiGanancias').previousElementSibling.textContent = 'Activos';
             document.getElementById('clientPageInfo').textContent = `1 / 1 (${data.length})`;
         }
-        
+
         document.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session && session.user.email === 'bettercomput@gmail.com') {
@@ -1084,4 +1245,5 @@
         });
     </script>
 </body>
+
 </html>
