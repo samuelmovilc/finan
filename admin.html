@@ -903,22 +903,45 @@
         </header>
 
         <!-- KPI CARDS -->
-        <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="kpi-card">
-                <div class="kpi-label" style="text-transform:uppercase;font-size:12px;font-weight:600;">Total Clientes</div>
-                <div class="kpi-value neutral" id="kpiTotal">0</div>
+        <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div class="kpi-card" style="padding: 24px;">
+                <div class="kpi-label" style="text-transform:uppercase;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--text-secondary);margin-bottom:20px;">Resumen de Clientes</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="text-align:center;">
+                        <span style="font-size:28px; font-weight:700; color:var(--text-primary);" id="kpiTotal">0</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Total</span>
+                    </div>
+                    <div style="height:40px;width:1px;background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <span style="font-size:28px; font-weight:700; color:#00E676;" id="kpiActivos">0</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Activos</span>
+                    </div>
+                    <div style="height:40px;width:1px;background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <span style="font-size:28px; font-weight:700; color:#f87171;" id="kpiInactivos">0</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Inactivos</span>
+                    </div>
+                </div>
             </div>
-            <div class="kpi-card">
-                <div class="kpi-label" style="text-transform:uppercase;font-size:12px;font-weight:600;">Ingresos Estimados</div>
-                <div class="kpi-value positive" id="kpiIngresos">$0.00</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label" style="text-transform:uppercase;font-size:12px;font-weight:600;">Clientes Activos</div>
-                <div class="kpi-value positive" id="kpiActivos">0</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label" style="text-transform:uppercase;font-size:12px;font-weight:600;">Clientes Inactivos</div>
-                <div class="kpi-value negative" id="kpiInactivos">0</div>
+            
+            <div class="kpi-card" style="padding: 24px;">
+                <div class="kpi-label" style="text-transform:uppercase;font-size:13px;font-weight:700;letter-spacing:1px;color:var(--text-secondary);margin-bottom:20px;">Balance Financiero</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="text-align:center;">
+                        <span style="font-size:24px; font-weight:700; color:#00E676;" id="kpiIngresos">$0.00</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Ingresos</span>
+                    </div>
+                    <div style="height:40px;width:1px;background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <span style="font-size:24px; font-weight:700; color:#f87171;" id="kpiEgresos">$0.00</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Egresos</span>
+                    </div>
+                    <div style="height:40px;width:1px;background:var(--border-color);"></div>
+                    <div style="text-align:center;">
+                        <span style="font-size:24px; font-weight:700; color:#60a5fa;" id="kpiBalance">$0.00</span><br>
+                        <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Balance</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1220,11 +1243,8 @@
                 </tr>
             `}).join('');
 
-            // Update Top Card (Egresos del mes)
-            const kpiEgresos = document.getElementById('kpiEgresos');
-            if (kpiEgresos) {
-                kpiEgresos.textContent = `${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-            }
+            window.currentEgresos = totalExpenses;
+            window.updateBalance();
         }
 
         window.deleteExpense = async function (id) {
@@ -1303,6 +1323,25 @@
 
         let allClients = [];
 
+        window.currentIngresos = 0;
+        window.currentEgresos = 0;
+
+        window.updateBalance = function() {
+            const balance = window.currentIngresos - window.currentEgresos;
+            
+            const elIngresos = document.getElementById('kpiIngresos');
+            if(elIngresos) elIngresos.textContent = '$' + window.currentIngresos.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
+            const elEgresos = document.getElementById('kpiEgresos');
+            if(elEgresos) elEgresos.textContent = '$' + window.currentEgresos.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
+            const elBalance = document.getElementById('kpiBalance');
+            if(elBalance) {
+                elBalance.textContent = '$' + balance.toLocaleString('en-US', { minimumFractionDigits: 2 });
+                elBalance.style.color = balance >= 0 ? '#60a5fa' : '#f87171';
+            }
+        }
+
         window.applyFilters = function() {
             const search = document.getElementById('searchPhone').value.toLowerCase();
             const status = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value.toLowerCase() : '';
@@ -1350,20 +1389,20 @@
                 });
             }
             
-            // ACTUALIZAR KPIS CON LA DATA FILTRADA
-            document.getElementById('kpiTotal').textContent = filtered.length;
-            
-            let totalIngresos = 0;
+            window.currentIngresos = 0;
             filtered.forEach(c => {
-                if(c.precio) totalIngresos += parseFloat(c.precio);
+                if(c.precio) window.currentIngresos += parseFloat(c.precio);
             });
-            document.getElementById('kpiIngresos').textContent = '$' + totalIngresos.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            window.updateBalance();
             
             const activos = filtered.filter(c => c.estado === 'activo').length;
             const inactivos = filtered.filter(c => c.estado !== 'activo').length;
             
-            document.getElementById('kpiActivos').textContent = activos;
-            document.getElementById('kpiInactivos').textContent = inactivos;
+            const elActivos = document.getElementById('kpiActivos');
+            if(elActivos) elActivos.textContent = activos;
+            
+            const elInactivos = document.getElementById('kpiInactivos');
+            if(elInactivos) elInactivos.textContent = inactivos;
 
             renderClientsTable(filtered);
         }
