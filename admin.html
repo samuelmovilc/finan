@@ -939,7 +939,7 @@
                 </div>
                 <div class="filter-group">
                     <i class="fas fa-clock"></i>
-                    <select id="filterExpiry">
+                    <select id="filterExpiry" onchange="applyFilters()">
                         <option value="">Todos</option>
                         <option value="soon">Próximos a vencer</option>
                         <option value="7days">Vence en 7 días</option>
@@ -947,7 +947,8 @@
                 </div>
                 <div class="filter-group">
                     <i class="fas fa-calendar-year"></i>
-                    <select id="filterYear">
+                    <select id="filterYear" onchange="applyFilters()">
+                        <option value="">Todos los años</option>
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
                         <option value="2024">2024</option>
@@ -955,7 +956,8 @@
                 </div>
                 <div class="filter-group">
                     <i class="fas fa-calendar-day"></i>
-                    <select id="filterMonth">
+                    <select id="filterMonth" onchange="applyFilters()">
+                        <option value="">Todos los meses</option>
                         <option value="6">Junio</option>
                         <option value="5">Mayo</option>
                         <option value="4">Abril</option>
@@ -1294,6 +1296,9 @@
         window.applyFilters = function() {
             const search = document.getElementById('searchPhone').value.toLowerCase();
             const status = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value.toLowerCase() : '';
+            const year = document.getElementById('filterYear') ? document.getElementById('filterYear').value : '';
+            const month = document.getElementById('filterMonth') ? document.getElementById('filterMonth').value : '';
+            const expiry = document.getElementById('filterExpiry') ? document.getElementById('filterExpiry').value : '';
             
             let filtered = allClients;
             
@@ -1306,6 +1311,33 @@
             
             if (status) {
                 filtered = filtered.filter(c => c.estado && c.estado.toLowerCase() === status);
+            }
+
+            if (year) {
+                filtered = filtered.filter(c => c.fecha_registro && c.fecha_registro.startsWith(year));
+            }
+
+            if (month) {
+                filtered = filtered.filter(c => {
+                    if (!c.fecha_registro) return false;
+                    const m = c.fecha_registro.split('-')[1];
+                    return parseInt(m) === parseInt(month);
+                });
+            }
+
+            if (expiry) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                filtered = filtered.filter(c => {
+                    if (!c.fecha_fin) return false;
+                    const fin = new Date(c.fecha_fin);
+                    const diffTime = fin - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (expiry === 'soon') return diffDays >= 0 && diffDays <= 15;
+                    if (expiry === '7days') return diffDays >= 0 && diffDays <= 7;
+                    return true;
+                });
             }
 
             renderClientsTable(filtered);
@@ -1526,11 +1558,74 @@
             
             allClients = data || [];
 
-            document.getElementById('kpiIngresos').textContent = allClients.length;
-            document.getElementById('kpiIngresos').previousElementSibling.textContent = 'Total Clientes';
+            document.getElementById('kpiTotal').textContent = allClients.length;
+            
+            let totalIngresos = 0;
+            allClients.forEach(c => {
+                if(c.precio) totalIngresos += parseFloat(c.precio);
+            });
+            document.getElementById('kpiIngresos').textContent = '
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session && session.user.email === 'bettercomput@gmail.com') {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('main-dashboard').style.display = 'block';
+                loadClients();
+                loadExpenses();
+            } else {
+                document.getElementById('login-overlay').classList.remove('hidden');
+                document.getElementById('main-dashboard').style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- MODAL CRUD CLIENTES -->
+    <div id="clientCrudModal" class="modal-crud hidden">
+        <div class="modal-crud-content">
+            <div class="modal-crud-header">
+                <h2><i class="fas fa-user-edit"></i> <span id="clientModalTitle">Agregar Cliente</span></h2>
+                <button class="btn-close-modal" onclick="closeClientModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="clientCrudForm" onsubmit="event.preventDefault(); saveClient();">
+                <input type="hidden" id="c_id">
+                <div class="crud-grid">
+                    <div class="crud-group"><label>Nombre</label><input type="text" id="c_nombre" required></div>
+                    <div class="crud-group"><label>Teléfono (Ej: 573...)</label><input type="text" id="c_telefono" required></div>
+                    <div class="crud-group"><label>Email</label><input type="email" id="c_email"></div>
+                    <div class="crud-group"><label>Empresa</label><input type="text" id="c_empresa"></div>
+                    <div class="crud-group"><label>Plan</label><input type="text" id="c_plan" placeholder="Anual, Mensual..."></div>
+                    <div class="crud-group"><label>Precio</label><input type="number" id="c_precio" step="0.01"></div>
+                    <div class="crud-group"><label>Moneda</label><input type="text" id="c_moneda" value="COP"></div>
+                    <div class="crud-group"><label>Idioma</label><input type="text" id="c_idioma" value="es"></div>
+                    <div class="crud-group"><label>Estado</label>
+                        <select id="c_estado">
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="crud-group"><label>Día de Seguimiento</label><input type="number" id="c_dia" value="0"></div>
+                    <div class="crud-group"><label>Fecha Inicio</label><input type="date" id="c_inicio"></div>
+                    <div class="crud-group"><label>Fecha Fin</label><input type="date" id="c_fin"></div>
+                    <div class="crud-group full"><label>Método de Pago / Fuente</label><input type="text" id="c_metodo" placeholder="Ej: Transferencia / Instagram"></div>
+                </div>
+                <div class="modal-crud-footer">
+                    <button type="button" class="btn-delete" style="padding: 10px 20px; border-radius: 12px;" onclick="closeClientModal()">Cancelar</button>
+                    <button type="submit" class="btn-add" id="btnSaveCrudClient" style="padding: 10px 20px; font-size: 14px;">Guardar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html> + totalIngresos.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            
             const activos = allClients.filter(c => c.estado === 'activo').length;
-            document.getElementById('kpiGanancias').textContent = activos;
-            document.getElementById('kpiGanancias').previousElementSibling.textContent = 'Activos';
+            const inactivos = allClients.filter(c => c.estado !== 'activo').length;
+            
+            document.getElementById('kpiActivos').textContent = activos;
+            document.getElementById('kpiInactivos').textContent = inactivos;
 
             // Ejecutar filtros inicialmente para mostrar la tabla
             applyFilters();
