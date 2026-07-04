@@ -505,6 +505,53 @@
             font-size: 11px;
         }
 
+        /* TOGGLE SWITCH */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 22px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f87171; /* Rojo inactivo */
+            transition: .3s;
+            border-radius: 22px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #00E676; /* Verde activo */
+        }
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(16px);
+        }
+        .toggle-switch-blue input:checked + .toggle-slider {
+            background-color: #3b82f6; /* Azul activo */
+        }
+
         /* GASTOS - mismo sistema */
         .expenses-section {
             background: var(--bg-card);
@@ -836,46 +883,53 @@
         </div>
 
         <!-- FILTROS -->
-        <div class="filters-bar">
-            <div class="filter-group">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar por teléfono..." id="searchPhone" oninput="applyFilters()" />
+        <div class="filters-bar" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <div class="filter-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar por teléfono..." id="searchPhone" oninput="applyFilters()" />
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-filter"></i>
+                    <select id="filterStatus" onchange="applyFilters()">
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                        <option value="vencido">Vencido</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-clock"></i>
+                    <select id="filterExpiry">
+                        <option value="">Todos</option>
+                        <option value="soon">Próximos a vencer</option>
+                        <option value="7days">Vence en 7 días</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-calendar-year"></i>
+                    <select id="filterYear">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-calendar-day"></i>
+                    <select id="filterMonth">
+                        <option value="6">Junio</option>
+                        <option value="5">Mayo</option>
+                        <option value="4">Abril</option>
+                        <option value="3">Marzo</option>
+                        <option value="2">Febrero</option>
+                        <option value="1">Enero</option>
+                    </select>
+                </div>
             </div>
-            <div class="filter-group">
-                <i class="fas fa-filter"></i>
-                <select id="filterStatus" onchange="applyFilters()">
-                    <option value="">Todos los estados</option>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                    <option value="vencido">Vencido</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <i class="fas fa-clock"></i>
-                <select id="filterExpiry">
-                    <option value="">Todos</option>
-                    <option value="soon">Próximos a vencer</option>
-                    <option value="7days">Vence en 7 días</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <i class="fas fa-calendar-year"></i>
-                <select id="filterYear">
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <i class="fas fa-calendar-day"></i>
-                <select id="filterMonth">
-                    <option value="6">Junio</option>
-                    <option value="5">Mayo</option>
-                    <option value="4">Abril</option>
-                    <option value="3">Marzo</option>
-                    <option value="2">Febrero</option>
-                    <option value="1">Enero</option>
-                </select>
+            <div>
+                <button onclick="refreshData()" class="btn-add" id="btn-refresh" style="background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; border-radius: 8px; padding: 0 15px; height: 38px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
             </div>
         </div>
 
@@ -1233,13 +1287,22 @@
                     <td>${c.nombre || '-'}</td>
                     <td><span class="badge-type" style="background:rgba(167,139,250,0.12);color:#a78bfa;">${(c.plan || '-').toUpperCase()}</span></td>
                     <td><span class="badge-type ${c.estado === 'activo' ? 'badge-income' : 'badge-expense'}">${(c.estado || '').toUpperCase()}</span></td>
-                    <td style="font-weight: bold; color: ${c.dia_seguimiento >= 7 ? '#00E676' : '#fbbf24'};">${c.dia_seguimiento != null ? c.dia_seguimiento + '/7' : '0/7'}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-weight: bold; color: ${c.dia_seguimiento >= 7 ? '#fbbf24' : '#3b82f6'};">${c.dia_seguimiento != null ? c.dia_seguimiento : '0'}/7</span>
+                            <label class="toggle-switch toggle-switch-blue" title="Cambiar Seguimiento">
+                                <input type="checkbox" ${c.dia_seguimiento != null && c.dia_seguimiento < 7 ? 'checked' : ''} onclick="event.preventDefault(); toggleTracking('${c.id}', ${c.dia_seguimiento || 0})">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </td>
                     <td>${c.fecha_inicio || '-'}</td>
                     <td>${c.fecha_registro || '-'}</td>
                     <td>
-                        <button class="btn-action" style="margin-right: 4px;" onclick="toggleClientStatus('${c.id}', '${c.estado}')" title="Cambiar Estado">
-                            <i class="fas fa-sync"></i>
-                        </button>
+                        <label class="toggle-switch" title="Cambiar Estado">
+                            <input type="checkbox" ${c.estado === 'activo' ? 'checked' : ''} onclick="event.preventDefault(); toggleClientStatus('${c.id}', '${c.estado}')">
+                            <span class="toggle-slider"></span>
+                        </label>
                         <button class="btn-delete" onclick="deleteClientRecord('${c.id}')" title="Eliminar Cliente">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -1271,6 +1334,34 @@
                 return;
             }
             loadClients();
+        }
+
+        window.toggleTracking = async function(id, currentDia) {
+            const isTracking = currentDia < 7;
+            const newDia = isTracking ? 7 : 0;
+            const actionText = isTracking ? 'FINALIZAR' : 'REINICIAR A CERO';
+            
+            if (!confirm(`¿Seguro que deseas ${actionText} el seguimiento de ventas para este cliente?`)) return;
+            
+            const { error } = await supabase.from('clients').update({ dia_seguimiento: newDia }).eq('id', id);
+            if (error) {
+                alert('Error al actualizar: ' + error.message);
+                return;
+            }
+            loadClients();
+        }
+
+        window.refreshData = async function() {
+            const btn = document.getElementById('btn-refresh');
+            const icon = btn.querySelector('i');
+            icon.classList.add('fa-spin');
+            
+            await Promise.all([
+                loadClients(),
+                loadExpenses()
+            ]);
+            
+            icon.classList.remove('fa-spin');
         }
 
         async function loadClients() {
