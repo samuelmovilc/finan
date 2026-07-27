@@ -1376,8 +1376,11 @@
                 // 1. Obtener email usando el teléfono (via RPC function segura)
                 const { data: email, error: rpcError } = await supabase.rpc('get_email_by_phone', { p_telefono: phone });
 
-                if (rpcError || !email) {
-                    throw new Error('El número de teléfono no está registrado.');
+                if (rpcError) {
+                    throw new Error('Error buscando el teléfono (RPC): ' + rpcError.message);
+                }
+                if (!email) {
+                    throw new Error('El número de teléfono no está registrado (no tiene email asociado).');
                 }
 
                 // 2. Iniciar sesión
@@ -1386,7 +1389,7 @@
                     password: phone + 'A1!'
                 });
 
-                if (error) throw new Error('Credenciales incorrectas o hubo un problema de seguridad.');
+                if (error) throw new Error('Supabase dice: "' + error.message + '" (código: ' + (error.status || 'N/A') + ', email usado: ' + email + ')');
 
                 // ✅ ÉXITO
                 msgEl.textContent = '✅ Acceso exitoso. Cargando tu panel...';
@@ -1422,7 +1425,7 @@
             const { data: cd, error: cdErr } = await supabase
                 .from('clients')
                 .select('*')
-                .eq('id', user.id)
+                .eq('email', user.email)
                 .single();
 
             if (cdErr) console.error('Error cargando cliente:', cdErr);
@@ -1445,11 +1448,11 @@
                 if (planEndEl && cd.fecha_fin) planEndEl.textContent = cd.fecha_fin;
             }
 
-            // 2. Cargar transacciones reales
+            // 2. Cargar transacciones reales (usando el id real de la tabla clients, no el id de auth)
             const { data: txData, error: txError } = await supabase
                 .from('transactions')
                 .select('*')
-                .eq('id_cliente', user.id)
+                .eq('id_cliente', cd ? cd.id : user.id)
                 .order('fecha', { ascending: false });
 
             if (txError) {
